@@ -12,14 +12,14 @@ C_perfil = {
         "per_c_email": "mateuskb@icloud.com",
         "per_c_senha": "teste"
     },
-    "endereco": {
-        "end_c_cep": "38017030",
-        "end_c_logradouro": "Av. Odilon Fernandes",
-        "end_i_numero": "235",
-        "end_c_localidade": "Uberaba",
-        "end_c_complemento": "Apto.1901",
-        "end_c_bairro": "Estados Unidos"
-    }
+    # "endereco": {
+    #     "end_c_cep": "38017030",
+    #     "end_c_logradouro": "Av. Odilon Fernandes",
+    #     "end_i_numero": "235",
+    #     "end_c_localidade": "Uberaba",
+    #     "end_c_complemento": "Apto.1901",
+    #     "end_c_bairro": "Estados Unidos"
+    # }
 }
 per = DbPerfis()
 print(per.C_perfil(C_perfil))

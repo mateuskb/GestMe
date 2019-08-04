@@ -2,7 +2,6 @@ import json
 import sys
 import psycopg2
 from psycopg2 import extras
-from psycopg2 import sql
 import datetime
 
 sys.path.append('../../../')
@@ -25,7 +24,7 @@ class DbPerfis:
             except:
                 self.conn = False
         
-    def C_perfil(self, input):
+    def c_perfil(self, input):
         
         data = {
             'ok': False,
@@ -69,12 +68,30 @@ class DbPerfis:
         if not perfil:
             data['errors']['perfil'] = 'Perfil não indicado.'
         else:
-            pass 
+            resp = self.valor_em_campo('per_c_perfil', perfil)
+            # data['resp'] = resp
+            if resp:
+                if resp['ok']:
+                    if resp['data']:
+                        data['errors']['perfil'] = 'Perfil já encontrado.'   
+                else:
+                    data['errors']['perfil'] = 'Erro computando perfil.'    
+            else:
+                data['errors']['perfil'] = 'Erro computando perfil.'
         
         if not email:
             data['errors']['email'] = 'Email não indicado.'
         else:
-            pass 
+            resp = self.valor_em_campo('per_c_email', email)
+            # data['resp'] = resp
+            if resp:
+                if resp['ok']:
+                    if resp['data']:
+                        data['errors']['email'] = 'Email já encontrado.'   
+                else:
+                    data['errors']['email'] = 'Erro computando email.'    
+            else:
+                data['errors']['email'] = 'Erro computando email.'
 
         if not senha:
             data['errors']['senha'] = 'Senha não indicada.'
@@ -187,4 +204,52 @@ class DbPerfis:
         return data
 
 
-        # data['errors']['errorex'] = 'error1'      
+    def valor_em_campo(self, campo, valor, id=0):
+    
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        # Vars
+
+        # Validation
+        if not campo:
+            data['errors']['campo'] = 'Nenhum campo indicado.'
+        
+        if not valor:
+            data['errors']['valor'] = 'Nenhum valor indicado.'
+
+        if not data['errors']:
+            try:
+                cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                
+                sql = f"""
+                    SELECT
+                        *
+                    FROM
+                        perfis
+                    WHERE
+                        {campo} = '{valor}'
+                        AND per_pk <> {id}
+                """
+
+                cur.execute(sql)
+                row = cur.fetchone()
+                    
+                if not data['errors']:
+                    data['ok'] = True
+                    data['data'] = row
+                    self.conn.commit()
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                self.conn.rollback()
+                data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+            
+            finally:
+                if(cur):
+                    cur.close()
+
+        return data
+  

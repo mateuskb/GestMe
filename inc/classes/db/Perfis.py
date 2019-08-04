@@ -3,6 +3,8 @@ import sys
 import psycopg2
 from psycopg2 import extras
 import datetime
+import jwt
+
 
 sys.path.append('../../../')
 
@@ -38,6 +40,7 @@ class DbPerfis:
         
         # Input
         perfil = ''
+        username = ''
         nascimento = ''
         email = ''
         senha = ''
@@ -53,6 +56,7 @@ class DbPerfis:
         if input:
             if 'perfil' in input:
                 perfil = str(input['perfil']['per_c_perfil']) if 'per_c_perfil' in input['perfil'] else ''
+                username = str(input['perfil']['per_c_username']) if 'per_c_username' in input['perfil'] else ''                
                 nascimento = str(input['perfil']['per_d_nascimento']) if 'per_d_nascimento' in input['perfil'] else ''    
                 email = str(input['perfil']['per_c_email']) if 'per_c_email' in input['perfil'] else ''    
                 senha = str(input['perfil']['per_c_senha']) if 'per_c_senha' in input['perfil'] else ''    
@@ -67,17 +71,24 @@ class DbPerfis:
         # Validation
         if not perfil:
             data['errors']['perfil'] = 'Perfil não indicado.'
+        
+        if not username:
+            data['errors']['username'] = 'Username não indicado.'            
         else:
-            resp = self.valor_em_campo('per_c_perfil', perfil)
-            # data['resp'] = resp
-            if resp:
-                if resp['ok']:
-                    if resp['data']:
-                        data['errors']['perfil'] = 'Perfil já encontrado.'   
-                else:
-                    data['errors']['perfil'] = 'Erro computando perfil.'    
+            username = username.strip()
+            if len(username) > 40:
+                data['errors']['username'] = 'Username deve ter menos que 40 caracteres.'
             else:
-                data['errors']['perfil'] = 'Erro computando perfil.'
+                resp = self.valor_em_campo('per_c_username', username)
+                # data['resp'] = resp
+                if resp:
+                    if resp['ok']:
+                        if resp['data']:
+                            data['errors']['username'] = 'username já encontrado.'   
+                    else:
+                        data['errors']['username'] = 'Erro computando username.'    
+                else:
+                    data['errors']['username'] = 'Erro computando username.'
         
         if not email:
             data['errors']['email'] = 'Email não indicado.'
@@ -158,12 +169,14 @@ class DbPerfis:
                     INSERT INTO
                         perfis(
                             per_c_perfil,
+                            per_c_username,
                             per_d_nascimento,
                             per_c_email,
                             per_c_senha,
                             per_fk_endereco,
                             per_dt_criado_em_serv
                         )VALUES (
+                            %s,
                             %s,
                             %s,
                             %s,
@@ -178,6 +191,7 @@ class DbPerfis:
                 
                 bind = [
                     perfil,
+                    username,
                     nascimento,
                     email,
                     senha,
@@ -202,7 +216,94 @@ class DbPerfis:
                     cur.close()
 
         return data
+    
+    def r_login(self, credentials):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
 
+        # Vars
+        pas = Password()
+        hash = ''
+        auth_token = ''
+        id_perfil = 0
+        
+        # Input
+        username = ''
+        password = ''
+
+        # Params
+        if credentials:
+            username = str(credentials['username']) if 'username' in credentials else ''  
+            password = str(credentials['password']) if 'password' in credentials else ''  
+        
+        # Validation
+        if not username:
+            data['errors']['username'] = 'Username não indicado.'
+        
+        if not password:
+            data['errors']['password'] = 'Senha não indicado.'
+        
+        if not data['errors']:
+            try:
+                cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+                sql = """
+                    SELECT
+                        per_pk,
+                        per_c_senha
+                    FROM
+                        perfis
+                    WHERE
+                        per_c_username = %s
+                """
+
+                bind = [
+                    username
+                ]
+
+                cur.execute(sql, bind)
+                row = cur.fetchone()
+                
+                if row:
+                    if 'per_c_senha' in row:
+                        hash = row['per_c_senha']
+                        if not pas.verify_password(hash, password):
+                            data['errors']['login'] = 'Username/Senha incorretos.'                        
+                    else:
+                        data['errors']['login'] = 'Username/Senha não encontrados.'
+                    
+                    if 'per_pk' in row:
+                        id_perfil = row['per_pk']
+                    else:
+                        data['errors']['login'] = 'Username/Senha não encontrados.'   
+                else:
+                    data['errors']['login'] = 'Username/Senha não encontrados.'
+
+                if not data['errors']:
+                    payload = {
+                        'idPerfil' : str(id_perfil)
+                    }
+
+                    auth_token = jwt.encode(payload, consts.JWT_SECRET, consts.JWT_ALGORITHM)
+                    # decoded = jwt.decode(auth_token, consts.JWT_SECRET, consts.JWT_ALGORITHM)
+                    
+                    data['ok'] = True
+                    data['data'] = auth_token
+                    self.conn.commit()
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                self.conn.rollback()
+                data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+            
+            finally:
+                if(cur):
+                    cur.close()
+
+        return data
 
     def valor_em_campo(self, campo, valor, id=0):
     

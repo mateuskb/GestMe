@@ -8,3 +8,7 @@ class Consts:
     }
 
     SGBDS = ['pgsql', 'mysql']
+
+    JWT_SECRET = 'rescdqwybfhonf283rt723yrdcb3714t378cbig872hbsc'
+
+    JWT_ALGORITHM = 'HS256'

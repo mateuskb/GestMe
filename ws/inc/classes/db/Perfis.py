@@ -289,6 +289,7 @@ class DbPerfis:
                     }
 
                     auth_token = jwt.encode(payload, consts.JWT_SECRET, consts.JWT_ALGORITHM)
+                    auth_token = auth_token.decode('UTF-8')
                     # decoded = jwt.decode(auth_token, consts.JWT_SECRET, consts.JWT_ALGORITHM)
                     
                     data['ok'] = True

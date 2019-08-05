@@ -23,4 +23,4 @@ r_login = {
 
 per = DbPerfis()
 # print(per.c_perfil(c_perfil))
-print(per.r_login(r_login))
+print(type(per.r_login(r_login)))

@@ -13,22 +13,30 @@ Perfis = DbPerfis()
 def index():
   return 'This is RECOMMENDIT API index'
   
-PREFIX = '/perfis'
-@app.route(PREFIX + '/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     credentials = {}
-    try:
+    status = 401
+
+    try:    
         credentials = request.json
-        if request.method == 'POST':
-            response = app.response_class(
-                response= json.dumps(Perfis.r_login(credentials)),
-                status=200,
-                mimetype='application/json'
-            )
     except:
-        response = app.response_class(
-                response= json.dumps(Perfis.r_login(credentials)),
-                status=401,
-                mimetype='application/json'
-            )
-    return response 
+        status = 401
+
+    resp = Perfis.r_login(credentials)
+    if resp:
+        if resp['ok']:
+            status=200
+        else:
+            status=401
+
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+
+    return response
+ 
+if __name__  == '__main__':
+    app.run(debug=True)

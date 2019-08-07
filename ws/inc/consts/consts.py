@@ -12,3 +12,5 @@ class Consts:
     JWT_SECRET = 'rescdqwybfhonf283rt723yrdcb3714t378cbig872hbsc'
 
     JWT_ALGORITHM = 'HS256'
+
+    AUTHORIZATION_TYPE = ['Bearer', 'Basic']

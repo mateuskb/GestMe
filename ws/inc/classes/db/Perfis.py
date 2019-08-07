@@ -9,8 +9,8 @@ import jwt
 sys.path.append('../../../')
 
 from inc.consts.consts import Consts as consts
-from inc.classes.lib.db import DbLib
-from inc.classes.lib.password import Password
+from inc.classes.lib.Db import DbLib
+from inc.classes.lib.Password import Password
 
 class DbPerfis:
 
@@ -50,6 +50,7 @@ class DbPerfis:
         numero = 0
         complemento = ''
         bairro = ''
+        auth_token = ''
 
 
         # Params
@@ -60,6 +61,7 @@ class DbPerfis:
                 nascimento = str(input['perfil']['per_d_nascimento']) if 'per_d_nascimento' in input['perfil'] else ''    
                 email = str(input['perfil']['per_c_email']) if 'per_c_email' in input['perfil'] else ''    
                 senha = str(input['perfil']['per_c_senha']) if 'per_c_senha' in input['perfil'] else ''    
+            
             if 'endereco' in input:
                 cep = str(input['endereco']['end_c_cep']) if 'end_c_cep' in input['endereco'] else ''
                 logradouro = str(input['endereco']['end_c_logradouro']) if 'end_c_logradouro' in input['endereco'] else ''    
@@ -67,6 +69,15 @@ class DbPerfis:
                 complemento = str(input['endereco']['end_c_complemento']) if 'end_c_complemento' in  input['endereco'] else ''  
                 bairro = str(input['endereco']['end_c_bairro']) if 'end_c_bairro' in input['endereco'] else ''  
                 numero = int(input['endereco']['end_i_numero']) if 'end_i_numero' in input['endereco'] else 0 
+            
+        #     auth_token = str(input['authToken']) if 'authToken' in input else '' 
+        # if auth_token:
+        #     decoded = jwt.decode(auth_token, consts.JWT_SECRET, consts.JWT_ALGORITHM)
+        #     if 'idPerfil' in decoded:
+        #     else:
+        #         data['errors']['401'] = '401'
+        # else:
+        #     data['errors']['401'] = '401'
 
         # Validation
         if not perfil:
@@ -204,7 +215,7 @@ class DbPerfis:
                     
                 if not data['errors']:
                     data['ok'] = True
-                    data['data'] = row
+                    data['data'] = row['per_pk']
                     self.conn.commit()
 
             except (Exception, psycopg2.DatabaseError) as error:

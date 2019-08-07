@@ -5,8 +5,6 @@ from psycopg2 import extras
 sys.path.append('../../../')
 from inc.consts.consts import Consts as consts
 
-
-
 class DbLib:
 
     def __init__(self, sgbd='pgsql'):

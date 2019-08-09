@@ -20,7 +20,9 @@ class SigninWindow(BoxLayout):
             if not username.isalnum() or not password.isalnum():
                 info.text = '[color=#ff0000]Username/Password invalid[/color]'
             else:
-                pass
+                resp = Requests.login(username, password)
+                info.text = resp
+                print(resp)
 
 class SigninApp(App):
 

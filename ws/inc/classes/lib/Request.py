@@ -24,4 +24,4 @@ class RequestLib:
                     credentials = json.loads(credentials)
                 return credentials
             except:
-                return {False}
+                return False

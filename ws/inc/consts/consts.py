@@ -1,5 +1,5 @@
 class Consts:
-
+    
     RECOMMENDIT_DB = {
         'hostname': "localhost",
         'username': "mateuskb",

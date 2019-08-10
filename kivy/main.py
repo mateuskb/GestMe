@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager
 
 sys.path.append('./')
-from request.Classes.Requests import Requests
+from inc.Classes.Requests import Requests
 from consts.consts import Consts
 
 # Redirects

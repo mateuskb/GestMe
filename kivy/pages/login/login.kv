@@ -85,8 +85,22 @@
             background_color: root.consts().COLOR_MAIN[1]
             background_normal: ''
             on_release: root.validade_user()
+        
+        FlatButton:
+            size_hint_y: 0
+            height: 10
+            text: 'Esqueci a senha'
+            font_size: 10
+            on_release: root.redirect_forgetpw()
 
         Label:
             id:sp2
+        
+
+    FlatButton:
+        size_hint_y: .1
+        height: 20
+        text: 'Home'
+        on_release: root.redirect_gestme()
 
         

@@ -44,12 +44,7 @@ class DbPerfis:
         nascimento = ''
         email = ''
         senha = ''
-        cep = ''
-        localidade = ''
-        logradouro = ''
-        numero = 0
-        complemento = ''
-        bairro = ''
+        id_pais = 0
         auth_token = ''
 
 
@@ -60,15 +55,9 @@ class DbPerfis:
                 username = str(input['perfil']['per_c_username']) if 'per_c_username' in input['perfil'] else ''                
                 nascimento = str(input['perfil']['per_d_nascimento']) if 'per_d_nascimento' in input['perfil'] else ''    
                 email = str(input['perfil']['per_c_email']) if 'per_c_email' in input['perfil'] else ''    
-                senha = str(input['perfil']['per_c_senha']) if 'per_c_senha' in input['perfil'] else ''    
-            
-            if 'endereco' in input:
-                cep = str(input['endereco']['end_c_cep']) if 'end_c_cep' in input['endereco'] else ''
-                logradouro = str(input['endereco']['end_c_logradouro']) if 'end_c_logradouro' in input['endereco'] else ''    
-                localidade = str(input['endereco']['end_c_localidade']) if 'end_c_localidade' in input['endereco'] else ''    
-                complemento = str(input['endereco']['end_c_complemento']) if 'end_c_complemento' in  input['endereco'] else ''  
-                bairro = str(input['endereco']['end_c_bairro']) if 'end_c_bairro' in input['endereco'] else ''  
-                numero = int(input['endereco']['end_i_numero']) if 'end_i_numero' in input['endereco'] else 0 
+                senha = str(input['perfil']['per_c_senha']) if 'per_c_senha' in input['perfil'] else '' 
+                id_pais = str(input['perfil']['per_fk_pais']) if 'per_fk_pais' in input['perfil'] else 0 
+                id_formacao = str(input['perfil']['per_fk_formacao']) if 'per_fk_formacao' in input['perfil'] else 0 
             
         #     auth_token = str(input['authToken']) if 'authToken' in input else '' 
         # if auth_token:
@@ -120,17 +109,13 @@ class DbPerfis:
         else:
             senha = pas.hash_password(senha)
 
-        if 'endereco' in input:
-            if not cep:
-                data['errors']['cep'] = 'Cep não indicado.'
-            if not logradouro:
-                data['errors']['logradouro'] = 'Logradouro não indicado.'
-            if not localidade:
-                data['errors']['localidade'] = 'Localidade não indicada.'
-            if not bairro:
-                data['errors']['bairro'] = 'Bairro não indicado.'
-            if numero < 1:
-                data['errors']['numero'] = 'Número inválido.'
+        if id_pais < 1:
+            data['errors']['pais'] = 'País não indicado.'
+        else:
+            pass # To-do
+        
+        # if id_formacao < 1:
+        #     data['errors']['formacao'] = 'Formação não indicada.'
 
         if not self.conn:
             data['errors']['conn'] = 'Erro de comunicação com o banco de dados.'
@@ -138,44 +123,6 @@ class DbPerfis:
         if not data['errors']:
             try:
                 cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-                if 'endereco' in input:
-                    sql = """
-                            INSERT INTO
-                                enderecos(
-                                    end_c_cep,
-                                    end_c_logradouro,
-                                    end_i_numero,
-                                    end_c_localidade,
-                                    end_c_complemento,
-                                    end_c_bairro
-                                )VALUES (
-                                    %s,
-                                    %s,
-                                    %s,
-                                    %s,
-                                    %s,
-                                    %s    
-                                )
-                                RETURNING *
-                            ;
-                            
-                        """
-                    bind = [
-                        cep,
-                        logradouro,
-                        str(numero),
-                        localidade,
-                        complemento,
-                        bairro
-                    ]
-
-                    cur.execute(sql, bind)
-                    id_endereco = cur.fetchone()['end_pk']
-
-                    if id_endereco < 1:
-                        data['errors']['endereco'] = 'Erro criando endereço.'
-
                 dt_now = datetime.datetime.now()
                 
                 sql = """
@@ -186,9 +133,13 @@ class DbPerfis:
                             per_d_nascimento,
                             per_c_email,
                             per_c_senha,
-                            per_fk_endereco,
+                            per_fk_pais,
+                            per_b_ativo,
+                            per_fk_formacao,
                             per_dt_criado_em_serv
                         )VALUES (
+                            %s,
+                            %s,
                             %s,
                             %s,
                             %s,
@@ -208,7 +159,9 @@ class DbPerfis:
                     nascimento,
                     email,
                     senha,
-                    str(id_endereco) if id_endereco > 0 else None,
+                    id_pais,
+                    True,
+                    id_formacao if id_formacao > 0 else None,
                     dt_now
                 ]
 

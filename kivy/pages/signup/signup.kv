@@ -1,3 +1,6 @@
+<FlatButton@ButtonBehavior+Label>:
+    font_size: 20
+
 <SignUpWindow>:
     id: main_win
     orientation: 'vertical'
@@ -38,3 +41,8 @@
             spacing: 15
             size_hint_y: None
             height: 120
+        
+    FlatButton:
+        text: 'Home'
+        size_hint_y: 0.1
+        on_release: root.redirect_gestme()

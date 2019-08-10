@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
 sys.path.append('../../')
-from request.Classes.Requests import Requests
+from inc.Classes.Requests import Requests
 from consts.consts import Consts
 
 # Load KV file
@@ -21,24 +21,31 @@ class LogInWindow(BoxLayout):
     def validade_user(self):
         username = self.ids.usr_field.text
         password = self.ids.pwd_field.text
-        info = self.ids.info
+        info = self.ids.info.text
+
+        error_invalid = '[color=#ff0000]Username/Password invalid[/color]'
+        error_required = '[color=#ff0000]Username/Password Required[/color]'
 
         if username == '' or password == '':
-            info.text = '[color=#ff0000]Username/Password Required[/color]'
+            info = error_required
         else:
             if not username.isalnum() or not password.isalnum():
-                info.text = '[color=#ff0000]Username/Password invalid[/color]'
+                info = error_invalid
             else:
                 resp = Requests.login(username, password)
-                if resp:
-                    if resp['status'] == 200:
-                        info.text = 'Login Success!'
-                    elif resp['status'] == 401:
-                        info.text = 'Anauthorized'
-                    else:
-                        info.text = '[color=#ff0000]Username/Password invalid[/color]'
+                if resp['status'] == 200:
+                    info = 'Login Success!'
+                elif resp['status'] == 401:
+                    info = error_invalid
                 else:
-                    info.text = '[color=#ff0000]Conection Lost! Try again later![/color]'
+                    info = error_invalid
+    
+    def redirect_gestme(self):
+        self.parent.parent.current = 'gestme_screen'
+    
+    def redirect_forgetpw(self):
+        pass
+
 
 class LogInApp(App):
 

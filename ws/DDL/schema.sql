@@ -4,6 +4,20 @@ CREATE SCHEMA public AUTHORIZATION postgres;
 
 COMMENT ON SCHEMA public IS 'standard public schema';
 
+-- DROP TYPE _tipo_formacao;
+
+CREATE TYPE _tipo_formacao (
+	INPUT = array_in,
+	OUTPUT = array_out,
+	RECEIVE = array_recv,
+	SEND = array_send,
+	ANALYZE = array_typanalyze,
+	ALIGNMENT = 4,
+	STORAGE = any,
+	CATEGORY = A,
+	ELEMENT = tipo_formacao,
+	DELIMITER = ',');
+
 -- DROP TYPE tipo_formacao;
 
 CREATE TYPE tipo_formacao AS ENUM (
@@ -78,31 +92,11 @@ CREATE SEQUENCE public.conteudos_con_pk_seq
 	MAXVALUE 2147483647
 	CACHE 1
 	NO CYCLE;
--- Drop table
-
--- DROP TABLE public.enderecos;
-
-CREATE TABLE public.enderecos (
-	end_pk serial NOT NULL,
-	end_c_cep bpchar(8) NULL,
-	end_c_logradouro varchar(120) NULL,
-	end_i_numero int4 NULL,
-	end_c_localidade varchar(60) NULL,
-	end_c_complemento varchar(120) NULL,
-	end_c_bairro varchar(60) NULL,
-	CONSTRAINT enderecos_pk PRIMARY KEY (end_pk)
-);
-CREATE INDEX enderecos_end_pk_idx ON public.enderecos USING btree (end_pk);
-
 -- DROP SEQUENCE public.enderecos_end_pk_seq;
 
 CREATE SEQUENCE public.enderecos_end_pk_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 2147483647
-	START 17
-	CACHE 1
-	NO CYCLE;
+	NO MINVALUE
+	NO MAXVALUE
 -- DROP SEQUENCE public.formacao_for_pk_seq;
 
 CREATE SEQUENCE public.formacao_for_pk_seq
@@ -117,14 +111,8 @@ CREATE SEQUENCE public.formacao_for_pk_seq
 
 CREATE TABLE public.formacoes (
 	for_pk serial NOT NULL,
-	for_fk_perfil int4 NULL,
-	for_fk_endereco int4 NULL,
-	for_c_formacao varchar(120) NULL,
-	for_e_tipo_formacao tipo_formacao NULL,
-	for_c_instituicao varchar(60) NULL,
-	CONSTRAINT formacoes_pk PRIMARY KEY (for_pk),
-	CONSTRAINT fk_for_end FOREIGN KEY (for_fk_endereco) REFERENCES enderecos(end_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE,
-	CONSTRAINT fk_for_per FOREIGN KEY (for_fk_perfil) REFERENCES perfis(per_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE
+	for_c_formacao varchar NULL,
+	CONSTRAINT formacoes_pk PRIMARY KEY (for_pk)
 );
 
 -- Drop table
@@ -156,15 +144,19 @@ CREATE SEQUENCE public.historico_his_pk_seq
 
 CREATE TABLE public.perfis (
 	per_pk serial NOT NULL,
-	per_fk_endereco int4 NULL,
 	per_c_perfil varchar(40) NULL,
 	per_d_nascimento date NULL,
 	per_c_email varchar(60) NULL,
 	per_dt_criado_em_serv timestamp NULL,
 	per_c_senha varchar(255) NULL,
 	per_c_username varchar(40) NULL,
+	per_b_ativo bool NULL DEFAULT false,
+	per_fk_pais int4 NULL,
+	per_b_email_auth bool NULL DEFAULT false,
+	per_fk_formacao int4 NULL,
 	CONSTRAINT perfis_pk PRIMARY KEY (per_pk),
-	CONSTRAINT fk_per_end FOREIGN KEY (per_fk_endereco) REFERENCES enderecos(end_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE
+	CONSTRAINT perfis_fk FOREIGN KEY (per_fk_pais) REFERENCES paises(pai_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE,
+	CONSTRAINT perfis_fk_2 FOREIGN KEY (per_fk_formacao) REFERENCES formacoes(for_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE
 );
 
 -- DROP SEQUENCE public.perfis_per_pk_seq;
@@ -173,7 +165,7 @@ CREATE SEQUENCE public.perfis_per_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
-	START 13
+	START 15
 	CACHE 1
 	NO CYCLE;
 -- Drop table
@@ -197,3 +189,13 @@ CREATE SEQUENCE public.relacionamento_categorias_rel_pk_seq
 	MAXVALUE 2147483647
 	CACHE 1
 	NO CYCLE;
+-- Drop table
+
+-- DROP TABLE public.paises;
+
+CREATE TABLE public.paises (
+	pai_pk serial NOT NULL,
+	pai_c_pais varchar(60) NULL,
+	pai_c_cod varchar(2) NULL,
+	CONSTRAINT paises_pk PRIMARY KEY (pai_pk)
+);

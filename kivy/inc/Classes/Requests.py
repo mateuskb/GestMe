@@ -4,7 +4,7 @@ import base64
 import json
 
 sys.path.append('../../')
-from request.environment import Environment
+from inc.environment import Environment
 
 class Requests:
     

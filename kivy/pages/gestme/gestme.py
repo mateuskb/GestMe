@@ -4,7 +4,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
 sys.path.append('../../')
-from request.Classes.Requests import Requests
 from consts.consts import Consts
 
 # Load KV file

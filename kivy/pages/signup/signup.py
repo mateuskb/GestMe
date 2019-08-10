@@ -4,17 +4,21 @@ from kivy.uix.boxlayout import BoxLayout
 
 sys.path.append('../../')
 from request.Classes.Requests import Requests
+from consts.consts import Consts
 
-class GestMeWindow(BoxLayout):
-    
+class SignUpWindow(BoxLayout):
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+    def consts(self):
+        return Consts()
 
-class GestMeApp(App):
+
+class SignUpApp(App):
 
     def build(self):
-        return GestMeWindow()
+        return SignUpWindow()
 
 if __name__ == '__main__':
-    GestMeApp().run()
+    SignUpApp().run()

@@ -1,11 +1,11 @@
-<RegisterWindow>:
+<SignUpWindow>:
     id: main_win
     orientation: 'vertical'
     space_x: self.size[0]/3
 
     canvas.before:
         Color: 
-            rgba: (.06, .6, .6, 1)
+            rgba: root.consts().COLOR_MAIN[0]
         
         Rectangle:
             size: self.size
@@ -17,14 +17,14 @@
         
         canvas.before:
             Color: 
-                rgba: (.06, .45, .45, 1)
+                rgba: root.consts().COLOR_MAIN[1]
             
             Rectangle:
                 size: self.size
                 pos: self.pos
         
         Label:
-            text:'Register'
+            text:'Sign Up'
             bold: True
             size_hint_x: 0.9
     

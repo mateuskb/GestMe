@@ -4,11 +4,15 @@ from kivy.uix.boxlayout import BoxLayout
 
 sys.path.append('../../')
 from request.Classes.Requests import Requests
+from consts.consts import Consts
 
-class SigninWindow(BoxLayout):
+class LogInWindow(BoxLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+    
+    def consts(self):
+        return Consts()
         
     def validade_user(self):
         username = self.ids.usr_field.text
@@ -32,10 +36,10 @@ class SigninWindow(BoxLayout):
                 else:
                     info.text = '[color=#ff0000]Conection Lost! Try again later![/color]'
 
-class SigninApp(App):
+class LogInApp(App):
 
     def build(self):
-        return SigninWindow()
+        return LogInWindow()
 
 if __name__ == '__main__':
-    SigninApp().run()
+    LogInApp().run()

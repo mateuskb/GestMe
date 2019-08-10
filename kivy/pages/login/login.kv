@@ -1,7 +1,7 @@
 <FlatButton@ButtonBehavior+Label>:
     font_size: 20
 
-<SigninWindow>:
+<LogInWindow>:
     id: main_win
     orientation: 'vertical'
     spacing: 10
@@ -9,7 +9,7 @@
     
     canvas.before:
         Color: 
-            rgba: (.06, .6, .6, 1)
+            rgba: root.consts().COLOR_MAIN[0]
         
         Rectangle:
             size: self.size
@@ -22,14 +22,14 @@
         
         canvas.before:
             Color: 
-                rgba: (.06, .45, .45, 1)
+                rgba: root.consts().COLOR_MAIN[1]
             
             Rectangle:
                 size: self.size
                 pos: self.pos
         
         Label:
-            text:'Login'
+            text:'Log In'
             bold: True
             size_hint_x: 0.9
             
@@ -82,7 +82,7 @@
             text: 'Sign In'
             size_hint_y: None
             height: 40
-            background_color: (.06, .45, .45, 1)
+            background_color: root.consts().COLOR_MAIN[1]
             background_normal: ''
             on_release: root.validade_user()
 

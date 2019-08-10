@@ -1,0 +1,45 @@
+<GestMeWindow>:
+    id: main_win
+    orientation: 'vertical'
+    spacing: 10
+    space_x: self.size[0]/3
+    
+    canvas.before:
+        Color: 
+            rgba: root.consts().COLOR_MAIN[0]
+        
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: main_win.space_x, 10
+        spacing: 40
+
+        Label:
+            id:title
+            text: 'Welcome to GestMe'
+            font_size: '40dp'
+            bold: True
+            size_hint_y: None
+            height: 100
+
+        Button:
+            text: 'Log In'
+            size_hint_y: None
+            height: 40
+            background_color: root.consts().COLOR_MAIN[1]
+            background_normal: ''
+            on_release: root.redirect_login()
+        
+        Button:
+            text: 'Sign Up'
+            size_hint_y: None
+            height: 40
+            background_color: root.consts().COLOR_MAIN[1]
+            background_normal: ''
+            on_release: root.redirect_signup()
+
+        Label:
+            id:sp2

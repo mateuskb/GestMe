@@ -20,7 +20,7 @@ class DbPerfis:
         else:
             try:
                 db = DbLib(sgbd='pgsql')
-                conn = db.connect(db=consts.RECOMMENDIT_DB)
+                conn = db.connect(db=consts.GESTME_DB)
                 conn.autocommit = False
                 self.conn = conn
             except:
@@ -132,6 +132,8 @@ class DbPerfis:
             if numero < 1:
                 data['errors']['numero'] = 'Número inválido.'
 
+        if not self.conn:
+            data['errors']['conn'] = 'Erro de comunicação com o banco de dados.'
 
         if not data['errors']:
             try:
@@ -212,7 +214,7 @@ class DbPerfis:
 
                 cur.execute(sql, bind)
                 row = cur.fetchone()
-                    
+                
                 if not data['errors']:
                     data['ok'] = True
                     data['data'] = row['per_pk']
@@ -258,6 +260,9 @@ class DbPerfis:
         if not password:
             data['errors']['password'] = 'Senha não indicado.'
         
+        if not self.conn:
+            data['errors']['conn'] = 'Erro de comunicação com o banco de dados.'
+
         if not data['errors']:
             try:
                 cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)

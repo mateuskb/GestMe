@@ -1,10 +1,10 @@
 class Consts:
     
-    RECOMMENDIT_DB = {
+    GESTME_DB = {
         'hostname': "localhost",
         'username': "mateuskb",
         'password': "djrtdg33",
-        'database': "recommendit"
+        'database': "GestMe"
     }
 
     SGBDS = ['pgsql', 'mysql']

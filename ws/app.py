@@ -20,7 +20,7 @@ Request_lib = RequestLib()
 # App Routes
 @app.route('/')
 def index():
-  return 'This is RECOMMENDIT API index'
+  return 'GestME index'
 
 # PERFIS
 @app.route('/login', methods=['POST'])
@@ -41,8 +41,6 @@ def login():
 @app.route('/perfis/add', methods=['POST'])
 def c_perfil():
     input = request.json
-    # auth_token = Request_lib.get_authorization(request, type='Bearer')
-    # input['authToken'] = auth_token if auth_token else ''
     resp = Perfis.c_perfil(input)
     status = 200 if resp['ok'] else 401
     response = app.response_class(

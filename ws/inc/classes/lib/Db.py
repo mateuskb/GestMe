@@ -13,7 +13,7 @@ class DbLib:
         else:
             self.sgbd = ''
     
-    def connect(self, db=consts.RECOMMENDIT_DB):
+    def connect(self, db=consts.GESTME_DB):
         if self.sgbd == 'pgsql':
             try:
                 conn = psycopg2.connect(host=db['hostname'], user=db['username'], password=db['password'], dbname=db['database'])
@@ -26,7 +26,7 @@ class DbLib:
 
 # try:
 #     db = DbLib(sgbd='pgsql')
-#     _conn = db.connect(db=consts.RECOMMENDIT_DB)
+#     _conn = db.connect(db=consts.GESTME_DB)
 #     _conn.autocommit = False
 #     if _conn == False:
 #         print('Erro de conexão com o banco de dados.')

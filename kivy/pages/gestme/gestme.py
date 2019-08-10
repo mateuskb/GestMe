@@ -1,18 +1,17 @@
 import sys
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.screenmanager import ScreenManager
+from kivy.lang import Builder
 
-sys.path.append('../')
+sys.path.append('../../')
 from request.Classes.Requests import Requests
 from consts.consts import Consts
 
-# Redirects
-from pages.login.login import LogInApp, LogInWindow
-from pages.signup.signup import SignUpApp, SignUpWindow
+# Load KV file
+Builder.load_file('pages/gestme/gestme.kv')
 
 class GestMeWindow(BoxLayout):
-    
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
@@ -20,12 +19,10 @@ class GestMeWindow(BoxLayout):
         return Consts()
 
     def redirect_login(self):
-        LogInApp().run()
-    
-    def redirect_signup(self):
-        SignUpApp().run()
+        self.parent.parent.current = 'login_screen'
 
-# sm = ScreenManager()
+    def redirect_signup(self):
+        self.parent.parent.current = 'signup_screen'
 
 class GestMeApp(App):
 

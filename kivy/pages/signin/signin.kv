@@ -57,6 +57,7 @@
                 id: usr_field
                 hint_text: 'Username'
                 multiline: False
+                write_tab: False
                 focus: True
                 on_text_validate: pwd_field.focus = True
             
@@ -64,6 +65,7 @@
                 id: pwd_field
                 password: True
                 hint_text: 'Password'
+                write_tab: False
                 multiline: False
                 on_text_validate: root.validade_user()
             # FlatButton:
@@ -86,6 +88,5 @@
 
         Label:
             id:sp2
-            
 
         

@@ -23,8 +23,7 @@ class Requests:
             'Authorization': f"Basic {input}"
         }
         resp = requests.request("POST", url, headers=headers)
-        if resp.status_code == 200:
-            resp = json.dumps(resp.text)
-        else:
-            resp = 'Unauthorized'
+        status = resp.status_code
+        resp = resp.json()
+        resp['status'] = status
         return resp

@@ -2,10 +2,11 @@ import sys
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
-sys.path.append('../')
+sys.path.append('../../')
 from request.Classes.Requests import Requests
 
 class SigninWindow(BoxLayout):
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
@@ -21,8 +22,15 @@ class SigninWindow(BoxLayout):
                 info.text = '[color=#ff0000]Username/Password invalid[/color]'
             else:
                 resp = Requests.login(username, password)
-                info.text = resp
-                print(resp)
+                if resp:
+                    if resp['status'] == 200:
+                        info.text = 'Login Success!'
+                    elif resp['status'] == 401:
+                        info.text = 'Anauthorized'
+                    else:
+                        info.text = '[color=#ff0000]Username/Password invalid[/color]'
+                else:
+                    info.text = '[color=#ff0000]Conection Lost! Try again later![/color]'
 
 class SigninApp(App):
 

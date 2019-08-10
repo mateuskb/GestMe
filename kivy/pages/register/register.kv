@@ -1,0 +1,40 @@
+<RegisterWindow>:
+    id: main_win
+    orientation: 'vertical'
+    space_x: self.size[0]/3
+
+    canvas.before:
+        Color: 
+            rgba: (.06, .6, .6, 1)
+        
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        size_hint_y: None
+        height: 50
+        
+        canvas.before:
+            Color: 
+                rgba: (.06, .45, .45, 1)
+            
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        
+        Label:
+            text:'Register'
+            bold: True
+            size_hint_x: 0.9
+    
+    BoxLayout:
+        orientation: 'vertical'
+        padding: main_win.space_x, 10
+        spacing: 20
+       
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 15
+            size_hint_y: None
+            height: 120

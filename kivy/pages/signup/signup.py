@@ -20,8 +20,9 @@ class SignUpWindow(BoxLayout):
 
     def redirect_gestme(self):
         self.parent.parent.current = 'gestme_screen'
-        
-
+    
+    def validate_user(self):
+        pass
 
 class SignUpApp(App):
 

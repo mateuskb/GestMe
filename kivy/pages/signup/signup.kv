@@ -34,13 +34,65 @@
     BoxLayout:
         orientation: 'vertical'
         padding: main_win.space_x, 10
-        spacing: 20
+        spacing: 10
        
         BoxLayout:
             orientation: 'vertical'
             spacing: 15
             size_hint_y: None
-            height: 120
+            height: 500
+        
+            Label:
+                id: info
+                text: ''
+                markup: True
+                
+            TextInput: 
+                id: nam_field
+                hint_text: 'Name'
+                multiline: False
+                write_tab: False
+                focus: True
+                on_text_validate: usr_field.focus = True
+            
+            TextInput: 
+                id: usr_field
+                hint_text: 'Username'
+                multiline: False
+                write_tab: False
+                focus: False
+                on_text_validate: dat_field.focus = True
+            
+            # DatePicker: 
+            #     id: dat_field
+            #     hint_text: 'Birtday'
+            #     date = date.today()
+            #     focus: False
+            #     on_text_validate: pwd_field.focus = True
+            
+            TextInput: 
+                id: ema_field
+                password: True
+                hint_text: 'E-mail'
+                write_tab: False
+                multiline: False
+                on_text_validate: pwd_field.focus = True
+            
+            TextInput: 
+                id: pwd_field
+                password: True
+                hint_text: 'Password'
+                write_tab: False
+                multiline: False
+                on_text_validate: vpw_field.focus = True
+            
+            TextInput: 
+                id: vpw_field
+                password: True
+                hint_text: 'Confirm password'
+                write_tab: False
+                multiline: False
+                on_text_validate: root.validade_user()
         
     FlatButton:
         text: 'Home'

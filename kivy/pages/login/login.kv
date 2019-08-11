@@ -68,7 +68,7 @@
                 hint_text: 'Password'
                 write_tab: False
                 multiline: False
-                on_text_validate: root.validade_user()
+                on_text_validate: root.validate_user()
             # FlatButton:
             #     height: 10
             #     text: 'Show Password'
@@ -80,12 +80,12 @@
             height: 40
 
         Button:
-            text: 'Sign In'
+            text: 'Log In'
             size_hint_y: None
             height: 40
             background_color: root.consts().COLOR_MAIN[1]
             background_normal: ''
-            on_release: root.validade_user()
+            on_release: root.validate_user()
         
         FlatButton:
             size_hint_y: 0

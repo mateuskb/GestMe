@@ -42,4 +42,14 @@ class Requests:
             resp = False
         return resp
     
+    def r_paises():
+        url = Environment.REQUEST_URL + '/paises'
+        try:
+            resp = requests.request("GET", url)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
     

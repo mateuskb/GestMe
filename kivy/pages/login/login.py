@@ -18,7 +18,7 @@ class LogInWindow(BoxLayout):
     def consts(self):
         return Consts()
         
-    def validade_user(self):
+    def validate_user(self):
         username = self.ids.usr_field.text
         password = self.ids.pwd_field.text
         info = self.ids.info

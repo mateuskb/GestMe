@@ -23,8 +23,25 @@ class SignUpWindow(BoxLayout):
         self.parent.parent.current = 'gestme_screen'
     
     def validate_user(self):
-        pass
+        name = self.ids.nam_field.text
+        username = self.ids.usr_field.text
+        email = self.ids.ema_field.text
+        password = self.ids.pwd_field.text
+        confirmation = self.ids.vpw_field.text
+        formacao = self.ids.fom_field.text
+        info = self.ids.info
+
+        error_invalid = '[color=#ff0000]Username/Password invalid[/color]'
+        error_required = '[color=#ff0000]Username/Password Required[/color]'
+
+        # if username == '' or password == '':
+        #     info.text = error_required
+        # else:
+        #     if not username.isalnum() or not password.isalnum():
+        #         info.text = error_invalid
+        info.text = formacao            
     
+
     def list_formacoes(self):
         info = self.ids.info
         resp = Requests.r_formacoes()
@@ -40,6 +57,23 @@ class SignUpWindow(BoxLayout):
         else:
             info.text = 'Connection lost, try again later!'
             return lista
+    
+    def list_paises(self):
+        info = self.ids.info
+        resp = Requests.r_paises()
+        lista = ()
+        if resp:
+            if resp['status'] == 200:
+                for item in resp['data']:
+                    lista = lista + (item['pai_c_pais'] + ' - ' + item['pai_c_cod'], )
+                return lista
+            else:
+                info.text = 'Connection lost, try again later!'
+                return lista
+        else:
+            info.text = 'Connection lost, try again later!'
+            return lista
+    
 
 class SignUpApp(App):
 

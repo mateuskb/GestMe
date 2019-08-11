@@ -2,6 +2,10 @@
 <FlatButton@ButtonBehavior+Label>:
     font_size: 20
 
+# <SpinnerOption>:
+#     size_hint: None, None
+#     size:  root.width, 20
+
 <SignUpWindow>:
     id: main_win
     orientation: 'vertical'
@@ -99,9 +103,25 @@
                 id: fom_field
                 text: 'Education'
                 values: root.list_formacoes()
-                # size_hint: [0.5,None]
+                background_color: root.consts().COLOR_MAIN[0]
                 height: '32dp'
                 on_text: root.textinputtext = self.text
+            
+            Spinner:
+                id: pai_field
+                text: 'Contries'
+                values: root.list_paises()
+                background_color: root.consts().COLOR_MAIN[0]
+                height: '32dp'
+                on_text: root.textinputtext = self.text
+
+            Button:
+                text: 'Next'
+                size_hint_y: None
+                height: 40
+                background_color: root.consts().COLOR_MAIN[1]
+                background_normal: ''
+                on_release: root.validate_user()
             
             Label:
                 id:sp2

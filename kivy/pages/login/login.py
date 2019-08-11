@@ -21,24 +21,27 @@ class LogInWindow(BoxLayout):
     def validade_user(self):
         username = self.ids.usr_field.text
         password = self.ids.pwd_field.text
-        info = self.ids.info.text
+        info = self.ids.info
 
         error_invalid = '[color=#ff0000]Username/Password invalid[/color]'
         error_required = '[color=#ff0000]Username/Password Required[/color]'
 
         if username == '' or password == '':
-            info = error_required
+            info.text = error_required
         else:
             if not username.isalnum() or not password.isalnum():
-                info = error_invalid
+                info.text = error_invalid
             else:
                 resp = Requests.login(username, password)
-                if resp['status'] == 200:
-                    info = 'Login Success!'
-                elif resp['status'] == 401:
-                    info = error_invalid
+                if resp:
+                    if resp['status'] == 200:
+                        info.text = 'Login Success!'
+                    elif resp['status'] == 401:
+                        info.text = error_invalid
+                    else:
+                        info.text = error_invalid
                 else:
-                    info = error_invalid
+                    info.text = 'Connection lost, try again later!'
     
     def redirect_gestme(self):
         self.parent.parent.current = 'gestme_screen'

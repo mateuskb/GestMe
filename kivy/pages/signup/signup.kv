@@ -1,4 +1,4 @@
-#:kivy
+#:kivy 1.11
 <FlatButton@ButtonBehavior+Label>:
     font_size: 20
 
@@ -62,7 +62,7 @@
                 multiline: False
                 write_tab: False
                 focus: False
-                on_text_validate: dat_field.focus = True
+                on_text_validate: ema_field.focus = True
             
             # DatePicker: 
             #     id: dat_field
@@ -73,9 +73,9 @@
             
             TextInput: 
                 id: ema_field
-                password: True
                 hint_text: 'E-mail'
                 write_tab: False
+                focus: False
                 multiline: False
                 on_text_validate: pwd_field.focus = True
             
@@ -94,6 +94,17 @@
                 write_tab: False
                 multiline: False
                 on_text_validate: root.validade_user()
+
+            Spinner:
+                id: fom_field
+                text: 'Education'
+                values: root.list_formacoes()
+                # size_hint: [0.5,None]
+                height: '32dp'
+                on_text: root.textinputtext = self.text
+            
+            Label:
+                id:sp2
         
     FlatButton:
         text: 'Home'

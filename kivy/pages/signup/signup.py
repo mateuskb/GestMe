@@ -1,6 +1,7 @@
 import sys
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.dropdown import DropDown
 from kivy.lang import Builder
 
 sys.path.append('../../')
@@ -23,6 +24,22 @@ class SignUpWindow(BoxLayout):
     
     def validate_user(self):
         pass
+    
+    def list_formacoes(self):
+        info = self.ids.info
+        resp = Requests.r_formacoes()
+        lista = ()
+        if resp:
+            if resp['status'] == 200:
+                for item in resp['data']:
+                    lista = lista + (item['for_c_formacao'], )
+                return lista
+            else:
+                info.text = 'Connection lost, try again later!'
+                return lista
+        else:
+            info.text = 'Connection lost, try again later!'
+            return lista
 
 class SignUpApp(App):
 

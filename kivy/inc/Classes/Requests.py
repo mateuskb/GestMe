@@ -22,8 +22,22 @@ class Requests:
         headers = {
             'Authorization': f"Basic {input}"
         }
-        resp = requests.request("POST", url, headers=headers)
-        status = resp.status_code
-        resp = resp.json()
-        resp['status'] = status
+        try:
+            resp = requests.request("POST", url, headers=headers)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
+    
+    def r_formacoes():
+        url = Environment.REQUEST_URL + '/formacoes'
+        try:
+            resp = requests.request("GET", url)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
         return resp

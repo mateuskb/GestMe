@@ -5,7 +5,7 @@ from kivy.lang import Builder
 
 sys.path.append('../../')
 from inc.Classes.Requests import Requests
-from consts.consts import Consts
+from inc.consts.consts import Consts
 
 # Load KV file
 Builder.load_file('pages/signup/signup.kv')

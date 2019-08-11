@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import ScreenManager
 
 sys.path.append('./')
 from inc.Classes.Requests import Requests
-from consts.consts import Consts
+from inc.consts.consts import Consts
 
 # Redirects
 from pages.gestme.gestme import GestMeWindow

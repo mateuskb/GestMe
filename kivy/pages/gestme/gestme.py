@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
 sys.path.append('../../')
-from consts.consts import Consts
+from inc.consts.consts import Consts
 
 # Load KV file
 Builder.load_file('pages/gestme/gestme.kv')

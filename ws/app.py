@@ -3,8 +3,10 @@ import sys
 import base64
 
 sys.path.append('./')
-from inc.classes.db.Perfis import DbPerfis
 from inc.classes.lib.Request import RequestLib
+from inc.classes.db.Perfis import DbPerfis
+from inc.classes.db.Formacoes import DbFormacoes
+from inc.classes.db.Paises import DbPaises
 
 # App init
 app = Flask(__name__)
@@ -15,6 +17,8 @@ app.config.update(
 
 # Classes
 Perfis = DbPerfis()
+Formacoes = DbFormacoes()
+Paises = DbPaises()
 Request_lib = RequestLib()
 
 # App Routes
@@ -50,6 +54,30 @@ def c_perfil():
     )
     return response
 
+# PAISES
+@app.route('/paises', methods=['GET'])
+def r_paises():
+    resp = Paises.r_paises()
+    status = 200 if resp['ok'] else 404
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
+# FORMACOES
+@app.route('/formacoes', methods=['GET'])
+def r_formacoes():
+    resp = Formacoes.r_formacoes()
+    status = 200 if resp['ok'] else 404
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+    
 
 if __name__  == '__main__':
     app.run(debug=True)

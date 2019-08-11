@@ -11,6 +11,8 @@ sys.path.append('../../../')
 from inc.consts.consts import Consts as consts
 from inc.classes.lib.Db import DbLib
 from inc.classes.lib.Password import Password
+from inc.classes.db.Formacoes import DbFormacoes
+from inc.classes.db.Paises import DbPaises
 
 class DbPerfis:
 
@@ -36,6 +38,8 @@ class DbPerfis:
 
         # Vars
         pas = Password()
+        pai = DbPaises()
+        fom = DbFormacoes()
         id_endereco = 0
         
         # Input
@@ -45,6 +49,7 @@ class DbPerfis:
         email = ''
         senha = ''
         id_pais = 0
+        id_formacao = 0
         auth_token = ''
 
 
@@ -56,9 +61,9 @@ class DbPerfis:
                 nascimento = str(input['perfil']['per_d_nascimento']) if 'per_d_nascimento' in input['perfil'] else ''    
                 email = str(input['perfil']['per_c_email']) if 'per_c_email' in input['perfil'] else ''    
                 senha = str(input['perfil']['per_c_senha']) if 'per_c_senha' in input['perfil'] else '' 
-                id_pais = str(input['perfil']['per_fk_pais']) if 'per_fk_pais' in input['perfil'] else 0 
-                id_formacao = str(input['perfil']['per_fk_formacao']) if 'per_fk_formacao' in input['perfil'] else 0 
-            
+                id_pais = int(input['perfil']['per_fk_pais']) if 'per_fk_pais' in input['perfil'] else 0 
+                id_formacao = int(input['perfil']['per_fk_formacao']) if 'per_fk_formacao' in input['perfil'] else 0 
+        
         #     auth_token = str(input['authToken']) if 'authToken' in input else '' 
         # if auth_token:
         #     decoded = jwt.decode(auth_token, consts.JWT_SECRET, consts.JWT_ALGORITHM)
@@ -112,10 +117,27 @@ class DbPerfis:
         if id_pais < 1:
             data['errors']['pais'] = 'País não indicado.'
         else:
-            pass # To-do
+            resp = pai.r_pais(id_pais)
+            if resp:
+                if resp['ok']:
+                    if not resp['data']:
+                        data['errors']['pais'] = 'País inválido.'
+                else:
+                    data['errors']['pais'] = 'Erro lendo país.'
+            else:
+                data['errors']['pais'] = 'Erro lendo país.'
         
-        # if id_formacao < 1:
-        #     data['errors']['formacao'] = 'Formação não indicada.'
+        if id_formacao > 0:
+            resp = fom.r_formacao(id_formacao)
+            # data['resp'] = resp
+            if resp:
+                if resp['ok']:
+                    if not resp['data']:
+                        data['errors']['formacao'] = 'Formação inválido.'
+                else:
+                    data['errors']['formacao'] = 'Erro lendo formação.'
+            else:
+                data['errors']['formacao'] = 'Erro lendo formação.'
 
         if not self.conn:
             data['errors']['conn'] = 'Erro de comunicação com o banco de dados.'

@@ -42,6 +42,18 @@ class Requests:
             resp = False
         return resp
     
+    def r_formacao_nome(formacao):
+        url = Environment.REQUEST_URL + '/formacoes/nome'
+        input = {'for_c_formacao': formacao}
+        try:
+            resp = requests.request("POST", url, json=input)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
+    
     def r_paises():
         url = Environment.REQUEST_URL + '/paises'
         try:
@@ -53,3 +65,14 @@ class Requests:
             resp = False
         return resp
     
+    def r_pais_nome(pais):
+        url = Environment.REQUEST_URL + '/paises/nome'
+        input = {'pai_c_pais': pais}
+        try:
+            resp = requests.request("POST", url, json=input)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp

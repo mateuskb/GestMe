@@ -1,16 +1,23 @@
 #:kivy 1.11
+#:import Factory kivy.factory.Factory
+
 <FlatButton@ButtonBehavior+Label>:
     font_size: 20
 
-# <SpinnerOption>:
-#     size_hint: None, None
-#     size:  root.width, 20
+<SpinnerOption>:
+    size:  root.width, 40
+    background_color: (.06, .45, .45, 1)
+    background_normal: ''
+
+<MyDropdown@DropDown>:
+    max_height: 200
 
 <SignUpWindow>:
     id: main_win
     orientation: 'vertical'
+    spacing: 10
     space_x: self.size[0]/3
-
+    
     canvas.before:
         Color: 
             rgba: root.consts().COLOR_MAIN[0]
@@ -18,6 +25,7 @@
         Rectangle:
             size: self.size
             pos: self.pos
+
 
     BoxLayout:
         size_hint_y: None
@@ -42,11 +50,12 @@
         spacing: 10
        
         BoxLayout:
+            id: box_main
             orientation: 'vertical'
             spacing: 15
             size_hint_y: None
-            height: 500
-        
+            height: 390
+            
             Label:
                 id: info
                 text: ''
@@ -67,22 +76,28 @@
                 write_tab: False
                 focus: False
                 on_text_validate: ema_field.focus = True
-            
-            # DatePicker: 
-            #     id: dat_field
-            #     hint_text: 'Birtday'
-            #     date = date.today()
-            #     focus: False
-            #     on_text_validate: pwd_field.focus = True
-            
+
             TextInput: 
                 id: ema_field
                 hint_text: 'E-mail'
                 write_tab: False
                 focus: False
                 multiline: False
-                on_text_validate: pwd_field.focus = True
-            
+                on_text_validate: nas_dd_field.focus = True
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: 15
+                size_hint_y: None
+                height: 32
+                
+                Label:
+                    text: 'Birthday'
+                    markup: True
+                    
+                DateInput:
+                    id: bir_field
+                    
             TextInput: 
                 id: pwd_field
                 password: True
@@ -97,7 +112,7 @@
                 hint_text: 'Confirm password'
                 write_tab: False
                 multiline: False
-                on_text_validate: root.validade_user()
+                on_text_validate: root.validate_user()
 
             Spinner:
                 id: fom_field
@@ -106,6 +121,7 @@
                 background_color: root.consts().COLOR_MAIN[0]
                 height: '32dp'
                 on_text: root.textinputtext = self.text
+                dropdown_cls: Factory.MyDropdown
             
             Spinner:
                 id: pai_field
@@ -114,19 +130,29 @@
                 background_color: root.consts().COLOR_MAIN[0]
                 height: '32dp'
                 on_text: root.textinputtext = self.text
+                dropdown_cls: Factory.MyDropdown
 
-            Button:
-                text: 'Next'
-                size_hint_y: None
-                height: 40
-                background_color: root.consts().COLOR_MAIN[1]
-                background_normal: ''
-                on_release: root.validate_user()
-            
-            Label:
-                id:sp2
+        Label:
+            id:sp
+            size_hint_y: None
+            height: 20
+     
+        Button:
+            text: 'Next'
+            size_hint_y: None
+            height: 40
+            background_color: root.consts().COLOR_MAIN[1]
+            background_normal: ''
+            on_release: root.validate_user()
+
+        Label:
+            id:sp2
         
+
     FlatButton:
+        size_hint_y: .1
+        height: 20
         text: 'Home'
-        size_hint_y: 0.1
         on_release: root.redirect_gestme()
+
+

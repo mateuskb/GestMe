@@ -66,6 +66,18 @@ def r_paises():
     )
     return response
 
+@app.route('/paises/nome', methods=['POST'])
+def r_pais_nome():
+    input = request.json
+    resp = Paises.r_pais_nome(input)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
 # FORMACOES
 @app.route('/formacoes', methods=['GET'])
 def r_formacoes():
@@ -78,6 +90,18 @@ def r_formacoes():
     )
     return response
     
+@app.route('/formacoes/nome', methods=['POST'])
+def r_formacao_nome():
+    input = request.json
+    resp = Formacoes.r_formacao_nome(input)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
 
 if __name__  == '__main__':
     app.run(debug=True)

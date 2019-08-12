@@ -118,3 +118,63 @@ class DbFormacoes:
                     cur.close()
 
         return data
+
+    def r_formacao_nome(self, input):
+
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+        # data['input'] = input
+
+        # Vars
+        formacao = ''
+        # Params
+        if input:
+            formacao = str(input['for_c_formacao']) if 'for_c_formacao' in input else ''
+
+        # Validation
+        if not formacao:
+            data['errors']['formacao'] = 'Formação não indicada.'
+
+        # Validation
+        if not self.conn:
+            data['errors']['conn'] = 'Erro de comunicação com o banco de dados.'
+
+        if not data['errors']:
+            try:
+                cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                
+                sql = """
+                    SELECT
+                        *
+                    FROM
+                        formacoes
+                    WHERE
+                        for_c_formacao = %s
+                    LIMIT 1
+                    ;
+                """
+
+                bind = [
+                    formacao
+                ]
+
+                cur.execute(sql, bind)
+                row = cur.fetchone()
+                
+                if not data['errors']:
+                    data['ok'] = True
+                    data['data'] = row
+                    self.conn.commit()
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                self.conn.rollback()
+                data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+            
+            finally:
+                if(cur):
+                    cur.close()
+
+        return data

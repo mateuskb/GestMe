@@ -7,10 +7,9 @@ sys.path.append('../../')
 from inc.environment import Environment
 
 class Requests:
-    
-    # def __init__(self):
-    #     pass
-    
+
+    # Perfis
+
     def login(username, password):
         input = {
             "username": username.strip(),
@@ -31,6 +30,32 @@ class Requests:
             resp = False
         return resp
     
+    def c_perfil(name, username, email, password, birthday, id_pais, id_formacao):
+        input = {
+            "perfil": {
+                "per_c_perfil": name,
+                "per_c_username": username,
+                "per_d_nascimento": birthday,
+                "per_c_email": email,
+                "per_c_senha": password,
+                "per_fk_pais": id_pais,
+                "per_fk_formacao": id_formacao
+            }
+        }
+        
+        url = Environment.REQUEST_URL + '/perfis/add'
+
+        try:
+            resp = requests.request("POST", url, json=input)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
+
+    # Formações
+
     def r_formacoes():
         url = Environment.REQUEST_URL + '/formacoes'
         try:
@@ -54,6 +79,8 @@ class Requests:
             resp = False
         return resp
     
+    # Países
+
     def r_paises():
         url = Environment.REQUEST_URL + '/paises'
         try:

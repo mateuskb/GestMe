@@ -83,7 +83,7 @@
                 write_tab: False
                 focus: False
                 multiline: False
-                on_text_validate: nas_dd_field.focus = True
+                on_text_validate: bir_field.focus = True
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -92,17 +92,21 @@
                 height: 32
                 
                 Label:
-                    text: 'Birthday'
+                    text: 'Birthday ( dd/mm/yyyy )'
                     markup: True
                     
                 DateInput:
                     id: bir_field
+                    focus: False
+                    write_tab: False
+                    on_text_validate: pwd_field.focus = True
                     
             TextInput: 
                 id: pwd_field
                 password: True
                 hint_text: 'Password'
                 write_tab: False
+                focus: False
                 multiline: False
                 on_text_validate: vpw_field.focus = True
             
@@ -111,6 +115,7 @@
                 password: True
                 hint_text: 'Confirm password'
                 write_tab: False
+                focus: False
                 multiline: False
                 on_text_validate: root.validate_user()
 
@@ -138,7 +143,7 @@
             height: 20
      
         Button:
-            text: 'Next'
+            text: 'Confirm'
             size_hint_y: None
             height: 40
             background_color: root.consts().COLOR_MAIN[1]

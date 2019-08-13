@@ -41,14 +41,56 @@ class SignUpWindow(BoxLayout):
         info = self.ids.info
 
         error_invalid = '[color=#ff0000]Invalid inputs[/color]'
+        error_password = '[color=#ff0000]Confirm password does not match[/color]'
         error_required = '[color=#ff0000]Inputs Required[/color]'
+        error_server = '[color=#ff0000]Connection lost! Try again later![/color]'
 
         if name == '' or username == '' or email == '' or birthday == '' or password == '' or confirmation == '' or formacao == 'Education' or pais == 'Contries':
             info.text = error_required
         else:
-            birthday = datetime.strptime(birthday, '%d/%m/%Y')
-            info.text = f'{birthday}'
-    
+            if password != confirmation:
+                info.text = error_password
+            else:
+                if len(birthday) != 10:
+                    info.text = error_invalid
+                else:
+                    # birthday = datetime.strptime(birthday, '%d/%m/%Y')
+                    resp = Requests.r_formacao_nome(formacao)
+                    if resp:
+                        if resp['data']:
+                            if 'for_pk' in resp['data']:
+                                formacao = resp['data']['for_pk']
+                                resp = Requests.r_pais_nome(pais)
+                                if resp:
+                                    if resp['data']:
+                                        if 'pai_pk' in resp['data']:
+                                            pais = resp['data']['pai_pk']
+                                            resp = Requests.c_perfil(name, username, email, password, birthday, pais, formacao)
+                                            if resp:
+                                                if resp['ok']:
+                                                    if resp['data']:
+                                                        info.text = 'Perfil criado com sucesso!'
+                                                    else:
+                                                        for error in resp['errors'].values():
+                                                            info.text = info.text + f'{error} \n'  
+                                                else:
+                                                    for error in resp['errors'].values():
+                                                        info.text = info.text + f'{error} \n'  
+                                            else:
+                                                info.text = error_server
+                                        else:
+                                            info.text = error_server
+                                    else:
+                                        info.text = error_server
+                                else:
+                                    info.text = error_server
+                            else:
+                                info.text = error_server
+                        else:
+                            info.text = error_server
+                    else:
+                        info.text = error_server    
+                        
 
     def list_formacoes(self):
         info = self.ids.info

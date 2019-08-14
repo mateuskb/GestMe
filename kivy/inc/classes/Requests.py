@@ -9,7 +9,7 @@ from inc.environment import Environment
 class Requests:
 
     # Perfis
-
+    @staticmethod
     def login(username, password):
         input = {
             "username": username.strip(),
@@ -29,7 +29,8 @@ class Requests:
         except:
             resp = False
         return resp
-    
+        
+    @staticmethod
     def c_perfil(name, username, email, password, birthday, id_pais, id_formacao):
         input = {
             "perfil": {
@@ -55,7 +56,7 @@ class Requests:
         return resp
 
     # Formações
-
+    @staticmethod
     def r_formacoes():
         url = Environment.REQUEST_URL + '/formacoes'
         try:
@@ -66,7 +67,8 @@ class Requests:
         except:
             resp = False
         return resp
-    
+
+    @staticmethod
     def r_formacao_nome(formacao):
         url = Environment.REQUEST_URL + '/formacoes/nome'
         input = {'for_c_formacao': formacao}
@@ -80,7 +82,7 @@ class Requests:
         return resp
     
     # Países
-
+    @staticmethod
     def r_paises():
         url = Environment.REQUEST_URL + '/paises'
         try:
@@ -92,6 +94,7 @@ class Requests:
             resp = False
         return resp
     
+    @staticmethod
     def r_pais_nome(pais):
         url = Environment.REQUEST_URL + '/paises/nome'
         input = {'pai_c_pais': pais}

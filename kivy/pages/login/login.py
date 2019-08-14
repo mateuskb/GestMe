@@ -2,6 +2,7 @@ import sys
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
+from kivy.storage.jsonstore import JsonStore
 
 sys.path.append('../../')
 from inc.classes.Requests import Requests
@@ -22,6 +23,7 @@ class LogInWindow(BoxLayout):
         username = self.ids.usr_field.text
         password = self.ids.pwd_field.text
         info = self.ids.info
+        storage = JsonStore(Consts.JSON_PATH)
 
         error_invalid = '[color=#ff0000]Username/Password invalid[/color]'
         error_required = '[color=#ff0000]Username/Password Required[/color]'
@@ -35,7 +37,8 @@ class LogInWindow(BoxLayout):
                 resp = Requests.login(username, password)
                 if resp:
                     if resp['status'] == 200:
-                        info.text = 'Login Success!'
+                        if resp['data']:
+                            storage['login'] = {'authToken': resp['data']}
                     elif resp['status'] == 401:
                         info.text = error_invalid
                     else:

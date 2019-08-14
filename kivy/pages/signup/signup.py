@@ -7,8 +7,8 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 
 sys.path.append('../../')
-from inc.Classes.Requests import Requests
-from inc.Classes.DateInput import DateInput
+from inc.classes.Requests import Requests
+from inc.classes.DateInput import DateInput
 from inc.consts.consts import Consts
 
 # Load KV file
@@ -69,7 +69,8 @@ class SignUpWindow(BoxLayout):
                                             if resp:
                                                 if resp['ok']:
                                                     if resp['data']:
-                                                        info.text = 'Perfil criado com sucesso!'
+                                                        self.clear_inputs()
+                                                        self.parent.parent.current = 'signupok_screen'
                                                     else:
                                                         for error in resp['errors'].values():
                                                             info.text = info.text + f'{error} \n'  
@@ -124,6 +125,16 @@ class SignUpWindow(BoxLayout):
             info.text = 'Connection lost, try again later!'
             return lista
     
+    def clear_inputs(self):
+        self.ids.nam_field.text = ''
+        self.ids.usr_field.text = ''
+        self.ids.ema_field.text = ''
+        self.ids.bir_field.text = ''
+        self.ids.pwd_field.text = ''
+        self.ids.vpw_field.text = ''
+        self.ids.fom_field.text = 'Education'
+        self.ids.pai_field.text = 'Contries'
+        self.ids.info.text = ''
 
 class SignUpApp(App):
 

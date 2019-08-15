@@ -1,15 +1,17 @@
-import sys
+import sys, os
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
 
-sys.path.append('../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../../')
+
+sys.path.append(BASE_PATH)
 from inc.classes.Requests import Requests
 from inc.consts.consts import Consts
 
 # Load KV file
-Builder.load_file('pages/login/login.kv')
+Builder.load_file(BASE_PATH + '/pages/login/login.kv')
 
 class LogInWindow(BoxLayout):
     

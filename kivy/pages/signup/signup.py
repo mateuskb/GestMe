@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from datetime import datetime
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -6,13 +6,16 @@ from kivy.uix.dropdown import DropDown
 from kivy.lang import Builder
 from kivy.core.window import Window
 
-sys.path.append('../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../../')
+
+sys.path.append(BASE_PATH)
+
 from inc.classes.Requests import Requests
 from inc.classes.DateInput import DateInput
 from inc.consts.consts import Consts
 
 # Load KV file
-Builder.load_file('pages/signup/signup.kv')
+Builder.load_file(BASE_PATH + '/pages/signup/signup.kv')
 
 class SignUpWindow(BoxLayout):
 

@@ -1,9 +1,11 @@
-import sys
+import sys, os
 import requests
 import base64
 import json
 
-sys.path.append('../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../')
+
+sys.path.append(BASE_PATH)
 from inc.environment import Environment
 
 class Requests:

@@ -1,9 +1,11 @@
-import sys
+import sys, os
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager
 
-sys.path.append('./')
+BASE_PATH = os.path.abspath(__file__+ './')
+
+sys.path.append(BASE_PATH)
 from inc.classes.Requests import Requests
 from inc.consts.consts import Consts
 
@@ -38,6 +40,10 @@ class MainApp(App):
 
     def build(self):
         return MainWindow()
+    
+    def on_request_close(self, *args):
+        self.textpopup(title='Exit', text='Are you sure?')
+        return True
 
 if __name__ == '__main__':
     MainApp().run()

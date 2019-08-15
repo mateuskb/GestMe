@@ -1,10 +1,12 @@
-import sys
+import sys, os
 import requests
 import base64
 import json
 from kivy.storage.jsonstore import JsonStore
 
-sys.path.append('../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../')
+
+sys.path.append(BASE_PATH)
 from inc.environment import Environment
 from inc.consts.consts import Consts
 
@@ -14,7 +16,7 @@ class Storage:
     def logoff():
         resp = False
         try:
-            storage = JsonStore("../../" + Consts.JSON_PATH)
+            storage = JsonStore(Consts.JSON_PATH)
             storage.delete('login')
             resp = True
         except:
@@ -25,7 +27,7 @@ class Storage:
     def r_authtoken():
         resp = False
         try:
-            storage = JsonStore("../../" + Consts.JSON_PATH)
+            storage = JsonStore(Consts.JSON_PATH)
             resp = storage['login']
         except:
             resp = False

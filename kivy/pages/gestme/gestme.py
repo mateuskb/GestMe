@@ -1,13 +1,15 @@
-import sys
+import sys, os
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
-sys.path.append('../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../../')
+
+sys.path.append(BASE_PATH)
 from inc.consts.consts import Consts
 
 # Load KV file
-Builder.load_file('pages/gestme/gestme.kv')
+Builder.load_file(BASE_PATH + '/pages/gestme/gestme.kv')
 
 class GestMeWindow(BoxLayout):
 

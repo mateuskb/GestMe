@@ -1,0 +1,107 @@
+#:kivy 1.11
+<FlatButton@ButtonBehavior+Label>:
+    font_size: 20
+
+<LogInWindow>:
+    id: main_win
+    orientation: 'vertical'
+    spacing: 10
+    space_x: self.size[0]/3
+    
+    canvas.before:
+        Color: 
+            rgba: root.consts().COLOR_MAIN[0]
+        
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
+    BoxLayout:
+        size_hint_y: None
+        height: 50
+        
+        canvas.before:
+            Color: 
+                rgba: root.consts().COLOR_MAIN[1]
+            
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        
+        Label:
+            text:'Log In'
+            bold: True
+            size_hint_x: 0.9
+            
+        # FlatButton:
+        #     text: 'X'
+        #     size_hint_x: 0.1
+    
+    BoxLayout:
+        orientation: 'vertical'
+        padding: main_win.space_x, 10
+        spacing: 20
+       
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 15
+            size_hint_y: None
+            height: 120
+            
+            Label:
+                id: info
+                text: ''
+                markup: True
+                
+            TextInput: 
+                id: usr_field
+                hint_text: 'Username'
+                multiline: False
+                write_tab: False
+                focus: True
+                on_text_validate: pwd_field.focus = True
+            
+            TextInput: 
+                id: pwd_field
+                password: True
+                hint_text: 'Password'
+                write_tab: False
+                multiline: False
+                on_text_validate: root.validate_user()
+            # FlatButton:
+            #     height: 10
+            #     text: 'Show Password'
+            #     on_press: pwd_field.password = False
+
+        Label:
+            id:sp
+            size_hint_y: None
+            height: 40
+
+        Button:
+            text: 'Log In'
+            size_hint_y: None
+            height: 40
+            background_color: root.consts().COLOR_MAIN[1]
+            background_normal: ''
+            on_release: root.validate_user()
+        
+        FlatButton:
+            size_hint_y: 0
+            height: 10
+            text: 'Esqueci a senha'
+            font_size: 10
+            on_release: root.redirect_forgetpw()
+
+        Label:
+            id:sp2
+        
+
+    FlatButton:
+        size_hint_y: .1
+        height: 20
+        text: 'Home'
+        on_release: root.redirect_gestme()
+
+        

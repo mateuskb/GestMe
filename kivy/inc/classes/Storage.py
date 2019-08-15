@@ -29,6 +29,10 @@ class Storage:
         try:
             storage = JsonStore(Consts.JSON_PATH)
             resp = storage['login']
+            if resp['authToken']:
+                resp = resp['authToken']
+            else:
+                resp = False
         except:
             resp = False
         return resp

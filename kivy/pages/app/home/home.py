@@ -18,18 +18,18 @@ class HomeWindow(BoxLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # Check authToken
+        # Check for login
         resp = Storage.r_authtoken()
-        print(resp)
+        if not resp:
+            self.logout()
     
     def consts(self):
         return Consts()
     
-    def redirect_gestme(self):
-        self.parent.parent.current = 'gestme_screen'
-    
-    def redirect_forgetpw(self):
-        pass
+    def logout(self):
+        resp = Storage.logoff()
+        if resp:
+            self.parent.parent.current = 'gestme_screen'
 
 
 class HomeApp(App):

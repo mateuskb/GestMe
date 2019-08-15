@@ -14,6 +14,7 @@ from pages.gestme.gestme import GestMeWindow
 from pages.login.login import LogInWindow
 from pages.signup.signup import SignUpWindow
 from pages.signup.signupok import SignupokWindow
+from pages.app.home.home import HomeWindow
 
 
 class MainWindow(BoxLayout):
@@ -22,6 +23,7 @@ class MainWindow(BoxLayout):
     login_widget = LogInWindow()
     signup_widget = SignUpWindow()
     signupok_widget = SignupokWindow()
+    app_home_widget = HomeWindow()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -29,6 +31,7 @@ class MainWindow(BoxLayout):
         self.ids.login_screen.add_widget(self.login_widget)
         self.ids.signup_screen.add_widget(self.signup_widget)
         self.ids.signupok_screen.add_widget(self.signupok_widget)
+        self.ids.app_home_screen.add_widget(self.app_home_widget)
         
     def consts(self):
         return Consts()

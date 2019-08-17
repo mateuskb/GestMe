@@ -4,11 +4,14 @@ import ast
 
 # Vars
 keywords = {}
+collections = {}
+mov_id = {}
+movies = {}
 ratings = {}
 
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
-data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')[:100]
+data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
 # Data Handling
 # Keywords
 data_kw = data_kw.to_dict()['keywords']
@@ -19,15 +22,12 @@ for key, values in data_kw.items():
         keywords[key].append(item['name'])
 
 # Ratings
-data_rt = data_rt.to_dict()['rating']
+data_rt = data_rt['rating']
 for key, value in data_rt.items():
-    if not key in ratings:
-        ratings[key] = []
-        
-    ratings[key].append(value)    
+    if key in ratings.keys():
+        ratings[key].append(value)
+    else:
+        ratings[key] = [value]
 
-    # values = ast.literal_eval(values)
-    # for item in values:
-    #     ratings[key].append(item['name'])
 
-print(data_rt)
+print(ratings)

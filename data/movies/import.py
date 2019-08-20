@@ -4,9 +4,10 @@ import ast, json
 
 # Vars
 keywords = []
-mov_key = {}
+mov_word = {}
 ratings = {}
-collections = {} # Add 1 to index
+collections = {} 
+mov_col = {} # Add 1 to index
 mov_id = {} # Add 1 to index
 genres = {}
 movies = {} # Add 1 to index
@@ -19,40 +20,57 @@ data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:50]
 # --- Data Handling ---
 
 # Keywords
+a = []
+keywords = list(dict.fromkeys(data_kw['keywords']))
+
+for keyword_list in keywords:
+    keyword_list = ast.literal_eval(keyword_list)
+    for word in keyword_list:
+        a.append(word['name'])
+
+keywords = a
+
 data_kw = data_kw.to_dict()['keywords']
+
 for key, values in data_kw.items():
     values = ast.literal_eval(values)
-    values = list(dict.fromkeys(values))
-    print(values)
-    mov_key[key] = []
+    mov_word[key] = []
     for item in values:
-        if not item in keywords:
-            keywords.append(item['name'])
-        mov_key[key].append(item['name'])
+        mov_word[key].append(item['name'])
 
-# # Ratings
-# data_rt = data_rt['rating']
-# for key, value in data_rt.items():
-#     if key in ratings.keys():
-#         ratings[key].append(value)
-#     else:
-#         ratings[key] = [value]
+# Ratings
+data_rt = data_rt['rating']
+for key, value in data_rt.items():
+    if key in ratings.keys():
+        ratings[key].append(value)
+    else:
+        ratings[key] = [value]
 
-# # Movies
-# mov_id = data_mv['id']
-# data_mv = data_mv.set_index('id')
+# Movies
+mov_id = data_mv['id']
+data_mv = data_mv.set_index('id')
 
-# # Collections
-# col = data_mv['belongs_to_collection']
-# for key, value in col.items():
-#     collections[key] = {}
+# Collections
+# a = []
+# collections = list(dict.fromkeys(data_mv['belongs_to_collection']))
 
-#     if isinstance(value, str): # Belong to a collection
-#         value = ast.literal_eval(value)
-#         collections[key]['name'] = value['name']
-#         collections[key]['poster_path'] = value['poster_path']
-#     else:
-#         collections[key] = None
+# for col in collections:
+#     for c in col:
+#         # c = ast.literal_eval(c)
+#         a.append(c)
+
+# collections = a
+
+col = data_mv['belongs_to_collection']
+for key, value in col.items():
+    mov_col[key] = {}
+
+    if isinstance(value, str): # Belong to a collection
+        value = ast.literal_eval(value)
+        mov_col[key]['name'] = value['name']
+        mov_col[key]['poster_path'] = value['poster_path']
+    else:
+        mov_col[key] = None
     
 # Genres
 # gen = data_mv['genres']
@@ -66,5 +84,5 @@ for key, values in data_kw.items():
 #     else:
 #         collections[key] = None
 
-print(len(keywords))
+print(a)
 

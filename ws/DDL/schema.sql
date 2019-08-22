@@ -35,6 +35,26 @@ CREATE SEQUENCE public.categorias_cat_pk_seq
 	MAXVALUE 2147483647
 	CACHE 1
 	NO CYCLE;
+-- DROP SEQUENCE public.colecao_col_pk_seq;
+
+CREATE SEQUENCE public.colecao_col_pk_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	CACHE 1
+	NO CYCLE;
+-- Drop table
+
+-- DROP TABLE public.colecoes;
+
+CREATE TABLE public.colecoes (
+	col_pk serial NOT NULL,
+	col_c_colecao varchar(60) NULL,
+	col_c_image_path varchar(120) NULL,
+	CONSTRAINT colecoes_pk PRIMARY KEY (col_pk)
+);
+CREATE INDEX colecoes_col_pk_idx ON public.colecoes USING btree (col_pk);
+
 -- Drop table
 
 -- DROP TABLE public.con_cat;
@@ -94,6 +114,8 @@ CREATE TABLE public.conteudos (
 	con_c_link varchar(255) NULL,
 	con_c_titulo varchar(60) NULL,
 	con_fk_tipo int4 NULL,
+	con_f_popularidade float4 NULL,
+	con_c_cod varchar(15) NULL,
 	CONSTRAINT conteudos_pk PRIMARY KEY (con_pk),
 	CONSTRAINT conteudos_fk FOREIGN KEY (con_fk_colecao) REFERENCES colecoes(col_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE,
 	CONSTRAINT conteudos_fk_2 FOREIGN KEY (con_fk_tipo) REFERENCES tipo_conteudo(tip_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE
@@ -238,18 +260,6 @@ CREATE SEQUENCE public.ratings_rat_pk_seq
 	NO CYCLE;
 -- Drop table
 
--- DROP TABLE public.colecoes;
-
-CREATE TABLE public.colecoes (
-	col_pk serial NOT NULL,
-	col_c_colecao varchar(60) NULL,
-	col_c_image_path varchar(120) NULL,
-	CONSTRAINT colecoes_pk PRIMARY KEY (col_pk)
-);
-CREATE INDEX colecoes_col_pk_idx ON public.colecoes USING btree (col_pk);
-
--- Drop table
-
 -- DROP TABLE public.tipo_conteudo;
 
 CREATE TABLE public.tipo_conteudo (
@@ -257,3 +267,13 @@ CREATE TABLE public.tipo_conteudo (
 	tip_c_tipo varchar(40) NULL,
 	CONSTRAINT tipo_conteudo_pk PRIMARY KEY (tip_pk)
 );
+
+-- DROP SEQUENCE public.tipo_conteudo_tip_pk_seq;
+
+CREATE SEQUENCE public.tipo_conteudo_tip_pk_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;

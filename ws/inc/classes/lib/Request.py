@@ -1,10 +1,12 @@
-import sys
+import sys, os
 import psycopg2
 from psycopg2 import extras
 import base64
 import json
 
-sys.path.append('../../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../../../')
+sys.path.append(BASE_PATH)
+
 from inc.consts.consts import Consts as consts
 
 class RequestLib:

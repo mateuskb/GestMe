@@ -1,12 +1,12 @@
 import json
-import sys
+import sys, os
 import psycopg2
 from psycopg2 import extras
 import datetime
 import jwt
 
-
-sys.path.append('../../../')
+BASE_PATH = os.path.abspath(__file__+ '/../../../../')
+sys.path.append(BASE_PATH)
 
 from inc.consts.consts import Consts as consts
 from inc.classes.lib.Db import DbLib

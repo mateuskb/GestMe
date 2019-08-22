@@ -2,7 +2,9 @@ from flask import Flask, request, json
 import sys
 import base64
 
-sys.path.append('./')
+BASE_PATH = os.path.abspath(__file__+ './')
+sys.path.append(BASE_PATH)
+
 from inc.classes.lib.Request import RequestLib
 from inc.classes.db.Perfis import DbPerfis
 from inc.classes.db.Formacoes import DbFormacoes

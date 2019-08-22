@@ -1,5 +1,4 @@
 import pandas as pd
-import psycopg2
 import ast, json
 
 # Vars
@@ -16,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:15]
 
 # --- Data Handling ---
 
@@ -87,8 +86,93 @@ for key, values in gen.items():
         mov_gen[key].append(item['name'])
 
 # Movies
+movies = data_mv.drop(['belongs_to_collection', 'budget', 'genres', 'imdb_id', 'original_language',
+                       'production_companies', 'production_countries', 'revenue', 'runtime', 'spoken_languages',
+                       'status', 'tagline', 'video', 'vote_average', 'vote_count'], axis=1)
+
+movies = movies.T.to_dict()
 
 
+# ---- INSERTS -----
 
-# print(mov_col)
+keywords_ids = []
 
+import sys, os
+import psycopg2
+from psycopg2 import extras
+
+BASE_PATH = os.path.abspath(__file__+ '/../../../')
+sys.path.append(BASE_PATH)
+
+from ws.inc.classes.lib.Db import DbLib
+from ws.inc.consts.consts import Consts as consts
+
+class DbImports:
+
+    def __init__(self, conn=None):
+        if conn:
+            self.conn = conn
+        else:
+            try:
+                db = DbLib(sgbd='pgsql')
+                conn = db.connect(db=consts.GESTME_DB)
+                conn.autocommit = False
+                self.conn = conn
+            except:
+                self.conn = False
+    
+    def import_keywords(self, keywords):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        keywords_ids = []
+
+        try:
+            cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            
+            for word in keywords:
+                sql = """
+                    INSERT INTO 
+                        keywords(
+                            key_c_keyword
+                        )VALUES(
+                            %s
+                        )
+                        RETURNING *
+                    ;
+                """
+                
+                bind = [
+                    word
+                ]
+
+                cur.execute(sql, bind)
+                row = cur.fetchone()
+                keywords_ids.append(row['key_pk'])
+        
+            
+            data['ok'] = True
+            data['data'] = keywords_ids
+            self.conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            self.conn.rollback()
+            data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+        
+        finally:
+            if(cur):
+                cur.close()
+        
+        return data
+
+
+# Run imports
+cl = DbImports()
+
+# resp = cl.import_keywords(keywords) # DO NOT run it again
+
+# print(resp['data'])

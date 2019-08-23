@@ -51,8 +51,8 @@ mov_id = data_mv['id']
 data_mv = data_mv.set_index('id')
 
 # Collections
-collections = dict.fromkeys(data_mv['belongs_to_collection'])
-collections = ast.literal_eval(collections)
+collections = list(dict.fromkeys(data_mv['belongs_to_collection']))
+# collections = ast.literal_eval(collections)
 
 col = data_mv['belongs_to_collection']
 for key, value in col.items():
@@ -253,8 +253,8 @@ class DbImports:
                 # cur.execute(sql, bind)
                 # row = cur.fetchone()
                 # collections_ids.append(row['col_pk'])
-                cols.append(col[5])
-            
+                cols = col['id']
+
             data['ok'] = True
             data['data'] = collections_ids
             self.conn.commit()

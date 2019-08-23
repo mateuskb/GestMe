@@ -51,7 +51,8 @@ mov_id = data_mv['id']
 data_mv = data_mv.set_index('id')
 
 # Collections
-collections = list(dict.fromkeys(data_mv['belongs_to_collection']))
+collections = dict.fromkeys(data_mv['belongs_to_collection'])
+collections = ast.literal_eval(collections)
 
 col = data_mv['belongs_to_collection']
 for key, value in col.items():
@@ -169,10 +170,116 @@ class DbImports:
         
         return data
 
+    def import_genres(self, genres):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        genres_ids = []
+
+        try:
+            cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            
+            for genre in genres:
+                sql = """
+                    INSERT INTO 
+                        categorias(
+                            cat_c_categoria
+                        )VALUES(
+                            %s
+                        )
+                        RETURNING *
+                    ;
+                """
+                
+                bind = [
+                    genre
+                ]
+
+                cur.execute(sql, bind)
+                row = cur.fetchone()
+                genres_ids.append(row['cat_pk'])
+        
+            
+            data['ok'] = True
+            data['data'] = genres_ids
+            self.conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            self.conn.rollback()
+            data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+        
+        finally:
+            if(cur):
+                cur.close()
+        
+        return data
+
+    def import_collections(self, collections):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        collections_ids = []
+        cols = []
+        try:
+            cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            
+            for col in collections:
+                # sql = """
+                #     INSERT INTO 
+                #         colecoes(
+                #             col_c_colecao,
+                #             col_c_image_path
+                #         )VALUES(
+                #             %s,
+                #             %s
+                #         )
+                #         RETURNING *
+                #     ;
+                # """
+                
+                # bind = [
+                #     col['name'],
+                #     col['poster_path']
+                # ]
+
+                # cur.execute(sql, bind)
+                # row = cur.fetchone()
+                # collections_ids.append(row['col_pk'])
+                cols.append(col[5])
+            
+            data['ok'] = True
+            data['data'] = collections_ids
+            self.conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            self.conn.rollback()
+            data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+        
+        finally:
+            if(cur):
+                cur.close()
+        
+        return cols
+
 
 # Run imports
 cl = DbImports()
 
 # resp = cl.import_keywords(keywords) # DO NOT run it again
+# keywords_ids = resp['data']
 
-# print(resp['data'])
+# resp = cl.import_genres(genres) # DO NOT run it again
+# genres_ids = resp['data']
+
+resp = cl.import_collections(collections) # DO NOT run it again
+# collections_ids = resp['data']
+
+print(resp)

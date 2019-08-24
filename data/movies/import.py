@@ -15,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:15]
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)
 
 # --- Data Handling ---
 
@@ -232,6 +232,8 @@ class DbImports:
             cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             
             for col in collections:
+                col = ast.literal_eval(col)
+
                 # sql = """
                 #     INSERT INTO 
                 #         colecoes(
@@ -253,7 +255,7 @@ class DbImports:
                 # cur.execute(sql, bind)
                 # row = cur.fetchone()
                 # collections_ids.append(row['col_pk'])
-                cols = col['id']
+                cols.append(col)
 
             data['ok'] = True
             data['data'] = collections_ids

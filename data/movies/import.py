@@ -228,34 +228,45 @@ class DbImports:
 
         collections_ids = []
         cols = []
+        a = 0
         try:
             cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             
             for col in collections:
-                col = ast.literal_eval(col)
+                if isinstance(col, str):
+                    col = ast.literal_eval(col)
 
-                # sql = """
-                #     INSERT INTO 
-                #         colecoes(
-                #             col_c_colecao,
-                #             col_c_image_path
-                #         )VALUES(
-                #             %s,
-                #             %s
-                #         )
-                #         RETURNING *
-                #     ;
-                # """
-                
-                # bind = [
-                #     col['name'],
-                #     col['poster_path']
-                # ]
+                    if isinstance(col, dict):
+                        name = col['name'] if col['name']  else ' '
+                        poster_path = col['poster_path'] if col['poster_path'] else ' '
 
-                # cur.execute(sql, bind)
-                # row = cur.fetchone()
-                # collections_ids.append(row['col_pk'])
-                cols.append(col)
+                        # if not name:
+                        #     data['errors']['name'] = 'Erro name.'
+                        # if not poster_path:
+                        #     data['errors']['posterPath'] = poster_path
+
+                        sql = """
+                            INSERT INTO 
+                                colecoes(
+                                    col_c_colecao,
+                                    col_c_image_path
+                                )VALUES(
+                                    %s,
+                                    %s
+                                )
+                                RETURNING *
+                            ;
+                        """
+                        
+                        bind = [
+                            name,
+                            poster_path
+                        ]
+
+                        cur.execute(sql, bind)
+                        row = cur.fetchone()
+                        collections_ids.append(row['col_pk'])
+                        # cols.append(col['name'])
 
             data['ok'] = True
             data['data'] = collections_ids
@@ -269,7 +280,7 @@ class DbImports:
             if(cur):
                 cur.close()
         
-        return cols
+        return data 
 
 
 # Run imports
@@ -281,7 +292,7 @@ cl = DbImports()
 # resp = cl.import_genres(genres) # DO NOT run it again
 # genres_ids = resp['data']
 
-resp = cl.import_collections(collections) # DO NOT run it again
+# resp = cl.import_collections(collections) # DO NOT run it again
 # collections_ids = resp['data']
 
 print(resp)

@@ -15,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:1]
 
 # --- Data Handling ---
 
@@ -282,6 +282,60 @@ class DbImports:
         
         return data 
 
+    def import_movies(self, movies):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        try:
+            cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            
+            for key, info in movies.items():
+
+                adult = bool(info['adult']) if 'adult' in info.keys() else False
+
+                # sql = """
+                #     INSERT INTO 
+                #         colecoes(
+                #             col_c_colecao,
+                #             col_c_image_path
+                #         )VALUES(
+                #             %s,
+                #             %s
+                #         )
+                #         RETURNING *
+                #     ;
+                # """
+                
+                # bind = [
+                #     name,
+                #     poster_path
+                # ]
+
+                # cur.execute(sql, bind)
+                # row = cur.fetchone()
+                # collections_ids.append(row['col_pk'])
+                # cols.append(col['name'])
+
+                data['movie'] = adult
+
+            data['ok'] = True
+            # data['data'] = collections_ids
+            self.conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            self.conn.rollback()
+            data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+        
+        finally:
+            if(cur):
+                cur.close()
+        
+        return data
+
 
 # Run imports
 cl = DbImports()
@@ -294,5 +348,7 @@ cl = DbImports()
 
 # resp = cl.import_collections(collections) # DO NOT run it again
 # collections_ids = resp['data']
+
+resp = cl.import_movies(movies) # DO NOT run it again
 
 print(resp)

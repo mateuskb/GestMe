@@ -122,6 +122,124 @@ class DbImports:
             except:
                 self.conn = False
     
+    def get_collection_id(self, key):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        key = str(key) if isinstance(key, int) else 0
+
+        if key == 0:
+            data['errors']['key'] = 'Chave não indicada.'
+        
+        if not data['errors']:
+
+            if key in mov_col.keys():
+                collection = mov_col[key]
+                if 'name' in collection.keys():
+                    collection = collection['name']
+                else:
+                    data['errors']['collection'] = 'Coleção inexistente;'
+            else:
+                data['errors']['key'] = 'Chave não existe.'
+
+            if not data['errors']:
+                try:
+                    cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                    
+                    sql = """
+                        SELECT
+                            *
+                        FROM
+                            colecoes
+                        WHERE
+                            col_c_colecao = %s
+                        ;
+                    """
+                    
+                    bind = [
+                        collection
+                    ]
+
+                    cur.execute(sql, bind)
+                    row = cur.fetchone()
+                    data['data'] = row['col_pk']
+                
+                    
+                    data['ok'] = True
+                    self.conn.commit()
+
+                except (Exception, psycopg2.DatabaseError) as error:
+                    self.conn.rollback()
+                    data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+                
+                finally:
+                    if(cur):
+                        cur.close()
+
+        return data
+    
+    def get_genres_id(self, key):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        key = str(key) if isinstance(key, int) else 0
+
+        if key == 0:
+            data['errors']['key'] = 'Chave não indicada.'
+        
+        if not data['errors']:
+
+            if key in mov_gen.keys():
+                genres = mov_gen[key]
+            else:
+                data['errors']['key'] = 'Chave não existe.'
+
+            if not data['errors']:
+                ids_generos = []
+                for gen in genres:
+                    try:
+                        cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                        
+                        sql = """
+                            SELECT
+                                *
+                            FROM
+                                categorias
+                            WHERE
+                                cat_c_categoria = %s
+                            ;
+                        """
+                        
+                        bind = [
+                            gen
+                        ]
+
+                        cur.execute(sql, bind)
+                        row = cur.fetchone()
+                        ids_generos.append(row['cat_pk'])
+                    
+                        data['data'] = ids_generos
+                        data['ok'] = True
+                        self.conn.commit()
+
+                    except (Exception, psycopg2.DatabaseError) as error:
+                        self.conn.rollback()
+                        data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+                    
+                    finally:
+                        if(cur):
+                            cur.close()
+
+        return data
+
     def import_keywords(self, keywords):
         
         data = {
@@ -295,7 +413,26 @@ class DbImports:
             
             for key, info in movies.items():
 
+                key = int(key)
                 adult = bool(info['adult']) if 'adult' in info.keys() else False
+                homepage = bool(info['homepage']) if 'homepage' in info.keys() else ''
+                title = bool(info['original_title']) if 'original_title' in info.keys() else ''
+                descricao = bool(info['overview']) if 'overview' in info.keys() else ''
+                popularidade = bool(info['popularity']) if 'popularity' in info.keys() else ''
+                criado_em = bool(info['release_date']) if 'release_date' in info.keys() else ''
+                conteudo = bool(info['title']) if 'title' in info.keys() else ''
+
+                resp = self.get_collection_id(key)
+                if resp and not resp['errors']:
+                    collection = resp['data']
+                else:
+                    collection = None
+
+                resp = self.get_genres_id(key)
+                if resp and not resp['errors']:
+                    genres = resp['data']
+                else:
+                    genres = []
 
                 # sql = """
                 #     INSERT INTO 
@@ -320,7 +457,8 @@ class DbImports:
                 # collections_ids.append(row['col_pk'])
                 # cols.append(col['name'])
 
-                data['movie'] = adult
+                data['genres'] = genres
+                data['key'] = key
 
             data['ok'] = True
             # data['data'] = collections_ids

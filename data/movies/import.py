@@ -1,5 +1,6 @@
 import pandas as pd
 import ast, json
+import datetime
 
 # Vars
 keywords = []
@@ -47,7 +48,6 @@ for key, value in data_rt.items():
         ratings[key] = [value]
 
 # Movies
-mov_id = data_mv['id']
 data_mv = data_mv.set_index('id')
 
 # Collections
@@ -411,16 +411,19 @@ class DbImports:
         try:
             cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             
+            ids_cadastrados = []
+
             for key, info in movies.items():
 
                 key = int(key)
-                adult = bool(info['adult']) if 'adult' in info.keys() else False
-                homepage = bool(info['homepage']) if 'homepage' in info.keys() else ''
-                title = bool(info['original_title']) if 'original_title' in info.keys() else ''
-                descricao = bool(info['overview']) if 'overview' in info.keys() else ''
-                popularidade = bool(info['popularity']) if 'popularity' in info.keys() else ''
-                criado_em = bool(info['release_date']) if 'release_date' in info.keys() else ''
-                conteudo = bool(info['title']) if 'title' in info.keys() else ''
+                adulto = bool(info['adult']) if 'adult' in info.keys() else False
+                homepage = info['homepage'] if 'homepage' in info.keys() else ''
+                title = info['original_title'] if 'original_title' in info.keys() else ''
+                descricao = info['overview'] if 'overview' in info.keys() else ''
+                popularidade = info['popularity'] if 'popularity' in info.keys() else ''
+                criado_em = info['release_date'] if 'release_date' in info.keys() else ''
+                conteudo = info['title'] if 'title' in info.keys() else ''
+                image_path = info['poster_path'] if 'poster_path' in info.keys() else ''
 
                 resp = self.get_collection_id(key)
                 if resp and not resp['errors']:
@@ -434,32 +437,82 @@ class DbImports:
                 else:
                     genres = []
 
-                # sql = """
-                #     INSERT INTO 
-                #         colecoes(
-                #             col_c_colecao,
-                #             col_c_image_path
-                #         )VALUES(
-                #             %s,
-                #             %s
-                #         )
-                #         RETURNING *
-                #     ;
-                # """
+                cadastrado_em = datetime.datetime.now()
+
+                sql = """
+                    INSERT INTO 
+                        conteudos(
+                            con_c_conteudo,
+                            con_t_descricao,
+                            con_dt_cadastrado_em,
+                            con_d_criado_em,
+                            con_c_image_path,
+                            con_b_adulto,
+                            con_fk_colecao,
+                            con_c_link,
+                            con_c_titulo,
+                            con_fk_tipo,
+                            con_f_popularidade,
+                            con_c_cod
+                            )VALUES(
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s
+                        )
+                        RETURNING *
+                    ;
+                """
                 
-                # bind = [
-                #     name,
-                #     poster_path
-                # ]
+                bind = [
+                    conteudo,
+                    descricao, 
+                    cadastrado_em,
+                    criado_em,
+                    image_path,
+                    adulto,
+                    collection,
+                    homepage,
+                    title,
+                    1,
+                    popularidade,
+                    key
+                ]
 
-                # cur.execute(sql, bind)
-                # row = cur.fetchone()
-                # collections_ids.append(row['col_pk'])
-                # cols.append(col['name'])
+                cur.execute(sql, bind)
+                row = cur.fetchone()
+                id_conteudo = row['con_pk']
+                ids_cadastrados.append(id_conteudo)
 
-                data['genres'] = genres
-                data['key'] = key
+                for gen in genres:
+                    sql = """
+                        INSERT INTO 
+                            con_cat(
+                                cct_fk_categoria,
+                                cct_fk_conteudo
+                                )VALUES(
+                                %s,
+                                %s
+                            )
+                        ;
+                    """
+                    
+                    bind = [
+                        gen,
+                        id_conteudo
+                    ]
 
+                    cur.execute(sql, bind)
+
+            data['data'] = ids_cadastrados
             data['ok'] = True
             # data['data'] = collections_ids
             self.conn.commit()

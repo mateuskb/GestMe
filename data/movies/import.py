@@ -8,7 +8,6 @@ mov_word = {}
 ratings = {}
 collections = {} 
 mov_col = {} # Add 1 to index
-mov_id = {} # Add 1 to index
 mov_gen = {} # Add 1 to index
 genres = {}
 movies = {} # Add 1 to index
@@ -16,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:1]
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[10:40]
 
 # --- Data Handling ---
 
@@ -239,6 +238,64 @@ class DbImports:
                             cur.close()
 
         return data
+    
+    def get_keywords_id(self, key):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        key = key if isinstance(key, int) else 0
+
+        if key == 0:
+            data['errors']['key'] = 'Chave não indicada.'
+        
+        if not data['errors']:
+
+            if key in mov_word.keys():
+                keywords = mov_word[key]
+            else:
+                data['errors']['key'] = 'Chave não existe.'
+
+            if not data['errors']:
+                id_words = []
+                for word in keywords:
+                    try:
+                        cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                        
+                        sql = """
+                            SELECT
+                                *
+                            FROM
+                                keywords
+                            WHERE
+                                key_c_keyword = %s
+                            ;
+                        """
+                        
+                        bind = [
+                            word
+                        ]
+
+                        cur.execute(sql, bind)
+                        row = cur.fetchone()
+                        id_words.append(row['key_pk'])
+                    
+                        data['data'] = id_words
+                        data['ok'] = True
+                        self.conn.commit()
+
+                    except (Exception, psycopg2.DatabaseError) as error:
+                        self.conn.rollback()
+                        data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+                    
+                    finally:
+                        if(cur):
+                            cur.close()
+
+        return data
 
     def import_keywords(self, keywords):
         
@@ -424,6 +481,7 @@ class DbImports:
                 criado_em = info['release_date'] if 'release_date' in info.keys() else ''
                 conteudo = info['title'] if 'title' in info.keys() else ''
                 image_path = info['poster_path'] if 'poster_path' in info.keys() else ''
+                ratings_movie = ratings[key] if key in ratings.keys() else []
 
                 resp = self.get_collection_id(key)
                 if resp and not resp['errors']:
@@ -436,6 +494,12 @@ class DbImports:
                     genres = resp['data']
                 else:
                     genres = []
+
+                resp = self.get_keywords_id(key)
+                if resp and not resp['errors']:
+                    keywords = resp['data']
+                else:
+                    keywords = []
 
                 cadastrado_em = datetime.datetime.now()
 
@@ -512,9 +576,48 @@ class DbImports:
 
                     cur.execute(sql, bind)
 
+                for word in keywords:
+                    sql = """
+                        INSERT INTO 
+                            con_key(
+                                ck_fk_keyword,
+                                ck_fk_conteudo
+                                )VALUES(
+                                %s,
+                                %s
+                            )
+                        ;
+                    """
+                    
+                    bind = [
+                        word,
+                        id_conteudo
+                    ]
+
+                    cur.execute(sql, bind)
+                
+                for rat in ratings_movie:
+                    sql = """
+                        INSERT INTO 
+                            ratings(
+                                rat_i_rating,
+                                rat_fk_conteudo
+                                )VALUES(
+                                %s,
+                                %s
+                            )
+                        ;
+                    """
+                    
+                    bind = [
+                        rat,
+                        id_conteudo
+                    ]
+
+                    cur.execute(sql, bind)
+
             data['data'] = ids_cadastrados
             data['ok'] = True
-            # data['data'] = collections_ids
             self.conn.commit()
 
         except (Exception, psycopg2.DatabaseError) as error:

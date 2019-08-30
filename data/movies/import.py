@@ -15,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[10:40]
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)
 
 # --- Data Handling ---
 
@@ -92,8 +92,7 @@ movies = data_mv.drop(['belongs_to_collection', 'budget', 'genres', 'imdb_id', '
 
 movies = movies.T.to_dict()
 
-
-# ---- INSERTS -----
+# ---- CLASS -----
 
 keywords_ids = []
 
@@ -135,13 +134,15 @@ class DbImports:
             data['errors']['key'] = 'Chave não indicada.'
         
         if not data['errors']:
-
             if key in mov_col.keys():
                 collection = mov_col[key]
-                if 'name' in collection.keys():
-                    collection = collection['name']
+                if collection:
+                    if 'name' in collection.keys():
+                        collection = collection['name']
+                    else:
+                        data['errors']['collection'] = 'Coleção inexistente.'
                 else:
-                    data['errors']['collection'] = 'Coleção inexistente;'
+                    data['errors']['collection'] = 'Coleção inexistente.'
             else:
                 data['errors']['key'] = 'Chave não existe.'
 
@@ -198,6 +199,8 @@ class DbImports:
 
             if key in mov_gen.keys():
                 genres = mov_gen[key]
+                if not genres:
+                    data['errors']['key'] = 'Chave não existe.'
             else:
                 data['errors']['key'] = 'Chave não existe.'
 
@@ -256,6 +259,8 @@ class DbImports:
 
             if key in mov_word.keys():
                 keywords = mov_word[key]
+                if not keywords:
+                    data['errors']['key'] = 'Palavra não existe.'
             else:
                 data['errors']['key'] = 'Chave não existe.'
 
@@ -296,6 +301,10 @@ class DbImports:
                             cur.close()
 
         return data
+
+
+# ---- INSERTS -----
+
 
     def import_keywords(self, keywords):
         
@@ -471,150 +480,151 @@ class DbImports:
             ids_cadastrados = []
 
             for key, info in movies.items():
-
-                key = int(key)
-                adulto = bool(info['adult']) if 'adult' in info.keys() else False
-                homepage = info['homepage'] if 'homepage' in info.keys() else ''
-                title = info['original_title'] if 'original_title' in info.keys() else ''
-                descricao = info['overview'] if 'overview' in info.keys() else ''
-                popularidade = info['popularity'] if 'popularity' in info.keys() else ''
-                criado_em = info['release_date'] if 'release_date' in info.keys() else ''
-                conteudo = info['title'] if 'title' in info.keys() else ''
-                image_path = info['poster_path'] if 'poster_path' in info.keys() else ''
-                ratings_movie = ratings[key] if key in ratings.keys() else []
-
-                resp = self.get_collection_id(key)
-                if resp and not resp['errors']:
-                    collection = resp['data']
-                else:
-                    collection = None
-
-                resp = self.get_genres_id(key)
-                if resp and not resp['errors']:
-                    genres = resp['data']
-                else:
-                    genres = []
-
-                resp = self.get_keywords_id(key)
-                if resp and not resp['errors']:
-                    keywords = resp['data']
-                else:
-                    keywords = []
-
-                cadastrado_em = datetime.datetime.now()
-
-                sql = """
-                    INSERT INTO 
-                        conteudos(
-                            con_c_conteudo,
-                            con_t_descricao,
-                            con_dt_cadastrado_em,
-                            con_d_criado_em,
-                            con_c_image_path,
-                            con_b_adulto,
-                            con_fk_colecao,
-                            con_c_link,
-                            con_c_titulo,
-                            con_fk_tipo,
-                            con_f_popularidade,
-                            con_c_cod
-                            )VALUES(
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s
-                        )
-                        RETURNING *
-                    ;
-                """
                 
-                bind = [
-                    conteudo,
-                    descricao, 
-                    cadastrado_em,
-                    criado_em,
-                    image_path,
-                    adulto,
-                    collection,
-                    homepage,
-                    title,
-                    1,
-                    popularidade,
-                    key
-                ]
+                if info:
+                    key = int(key)
+                    adulto = bool(info['adult']) if 'adult' in info.keys() else False
+                    homepage = info['homepage'] if 'homepage' in info.keys() else ''
+                    title = info['original_title'] if 'original_title' in info.keys() else ''
+                    descricao = info['overview'] if 'overview' in info.keys() else ''
+                    popularidade = info['popularity'] if 'popularity' in info.keys() else ''
+                    criado_em = info['release_date'] if 'release_date' in info.keys() else ''
+                    conteudo = info['title'] if 'title' in info.keys() else ''
+                    image_path = info['poster_path'] if 'poster_path' in info.keys() else ''
+                    ratings_movie = ratings[key] if key in ratings.keys() else []
 
-                cur.execute(sql, bind)
-                row = cur.fetchone()
-                id_conteudo = row['con_pk']
-                ids_cadastrados.append(id_conteudo)
+                    resp = self.get_collection_id(key)
+                    if resp and not resp['errors']:
+                        collection = resp['data']
+                    else:
+                        collection = None
 
-                for gen in genres:
+                    resp = self.get_genres_id(key)
+                    if resp and not resp['errors']:
+                        genres = resp['data']
+                    else:
+                        genres = []
+
+                    resp = self.get_keywords_id(key)
+                    if resp and not resp['errors']:
+                        keywords = resp['data']
+                    else:
+                        keywords = []
+
+                    cadastrado_em = datetime.datetime.now()
+
                     sql = """
                         INSERT INTO 
-                            con_cat(
-                                cct_fk_categoria,
-                                cct_fk_conteudo
+                            conteudos(
+                                con_c_conteudo,
+                                con_t_descricao,
+                                con_dt_cadastrado_em,
+                                con_d_criado_em,
+                                con_c_image_path,
+                                con_b_adulto,
+                                con_fk_colecao,
+                                con_c_link,
+                                con_c_titulo,
+                                con_fk_tipo,
+                                con_f_popularidade,
+                                con_c_cod
                                 )VALUES(
+                                %s,
+                                %s,
+                                %s,
+                                %s,
+                                %s,
+                                %s,
+                                %s,
+                                %s,
+                                %s,
+                                %s,
                                 %s,
                                 %s
                             )
+                            RETURNING *
                         ;
                     """
                     
                     bind = [
-                        gen,
-                        id_conteudo
+                        conteudo,
+                        descricao, 
+                        cadastrado_em,
+                        criado_em,
+                        image_path,
+                        adulto,
+                        collection,
+                        homepage,
+                        title,
+                        1,
+                        popularidade,
+                        key
                     ]
 
                     cur.execute(sql, bind)
+                    row = cur.fetchone()
+                    id_conteudo = row['con_pk']
+                    ids_cadastrados.append(id_conteudo)
 
-                for word in keywords:
-                    sql = """
-                        INSERT INTO 
-                            con_key(
-                                ck_fk_keyword,
-                                ck_fk_conteudo
-                                )VALUES(
-                                %s,
-                                %s
-                            )
-                        ;
-                    """
+                    for gen in genres:
+                        sql = """
+                            INSERT INTO 
+                                con_cat(
+                                    cct_fk_categoria,
+                                    cct_fk_conteudo
+                                    )VALUES(
+                                    %s,
+                                    %s
+                                )
+                            ;
+                        """
+                        
+                        bind = [
+                            gen,
+                            id_conteudo
+                        ]
+
+                        cur.execute(sql, bind)
+
+                    for word in keywords:
+                        sql = """
+                            INSERT INTO 
+                                con_key(
+                                    ck_fk_keyword,
+                                    ck_fk_conteudo
+                                    )VALUES(
+                                    %s,
+                                    %s
+                                )
+                            ;
+                        """
+                        
+                        bind = [
+                            word,
+                            id_conteudo
+                        ]
+
+                        cur.execute(sql, bind)
                     
-                    bind = [
-                        word,
-                        id_conteudo
-                    ]
+                    for rat in ratings_movie:
+                        sql = """
+                            INSERT INTO 
+                                ratings(
+                                    rat_i_rating,
+                                    rat_fk_conteudo
+                                    )VALUES(
+                                    %s,
+                                    %s
+                                )
+                            ;
+                        """
+                        
+                        bind = [
+                            rat,
+                            id_conteudo
+                        ]
 
-                    cur.execute(sql, bind)
-                
-                for rat in ratings_movie:
-                    sql = """
-                        INSERT INTO 
-                            ratings(
-                                rat_i_rating,
-                                rat_fk_conteudo
-                                )VALUES(
-                                %s,
-                                %s
-                            )
-                        ;
-                    """
-                    
-                    bind = [
-                        rat,
-                        id_conteudo
-                    ]
-
-                    cur.execute(sql, bind)
+                        cur.execute(sql, bind)
 
             data['data'] = ids_cadastrados
             data['ok'] = True

@@ -15,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:2]
 
 # --- Data Handling ---
 
@@ -653,6 +653,6 @@ cl = DbImports()
 # resp = cl.import_collections(collections) # DO NOT run it again
 # collections_ids = resp['data']
 
-resp = cl.import_movies(movies) # DO NOT run it again
+# resp = cl.import_movies(movies) # DO NOT run it again
 
 print(resp)

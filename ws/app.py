@@ -1,5 +1,5 @@
 from flask import Flask, request, json
-import sys
+import sys, os
 import base64
 
 BASE_PATH = os.path.abspath(__file__+ './')

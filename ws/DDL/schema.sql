@@ -33,14 +33,7 @@ CREATE SEQUENCE public.categorias_cat_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
-	CACHE 1
-	NO CYCLE;
--- DROP SEQUENCE public.colecao_col_pk_seq;
-
-CREATE SEQUENCE public.colecao_col_pk_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 2147483647
+	START 32
 	CACHE 1
 	NO CYCLE;
 -- Drop table
@@ -48,13 +41,21 @@ CREATE SEQUENCE public.colecao_col_pk_seq
 -- DROP TABLE public.colecoes;
 
 CREATE TABLE public.colecoes (
-	col_pk serial NOT NULL,
 	col_c_colecao varchar(60) NULL,
 	col_c_image_path varchar(120) NULL,
+	col_pk serial NOT NULL,
 	CONSTRAINT colecoes_pk PRIMARY KEY (col_pk)
 );
-CREATE INDEX colecoes_col_pk_idx ON public.colecoes USING btree (col_pk);
 
+-- DROP SEQUENCE public.colecoes_col_pk_seq;
+
+CREATE SEQUENCE public.colecoes_col_pk_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 19635
+	CACHE 1
+	NO CYCLE;
 -- Drop table
 
 -- DROP TABLE public.con_cat;
@@ -64,8 +65,8 @@ CREATE TABLE public.con_cat (
 	cct_fk_categoria int4 NULL,
 	cct_fk_conteudo int4 NULL,
 	CONSTRAINT con_cat_pk PRIMARY KEY (cct_pk),
-	CONSTRAINT cct_cat_fk FOREIGN KEY (cct_fk_categoria) REFERENCES categorias(cat_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE,
-	CONSTRAINT cct_con_fk FOREIGN KEY (cct_fk_conteudo) REFERENCES conteudos(con_pk) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT cct_con_fk FOREIGN KEY (cct_fk_conteudo) REFERENCES conteudos(con_pk) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT con_cat_fk FOREIGN KEY (cct_fk_categoria) REFERENCES categorias(cat_pk) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE
 );
 
 -- DROP SEQUENCE public.con_cat_cct_pk_seq;
@@ -74,6 +75,7 @@ CREATE SEQUENCE public.con_cat_cct_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
+	START 2106
 	CACHE 1
 	NO CYCLE;
 -- Drop table
@@ -95,6 +97,7 @@ CREATE SEQUENCE public.con_key_ck_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
+	START 13516
 	CACHE 1
 	NO CYCLE;
 -- Drop table
@@ -103,16 +106,15 @@ CREATE SEQUENCE public.con_key_ck_pk_seq
 
 CREATE TABLE public.conteudos (
 	con_pk serial NOT NULL,
-	con_c_conteudo varchar(40) NULL,
+	con_c_conteudo varchar(120) NULL,
 	con_t_descricao text NULL,
 	con_dt_cadastrado_em timestamp NULL,
 	con_d_criado_em date NULL,
 	con_c_image_path varchar(120) NULL,
 	con_b_adulto bool NULL DEFAULT false,
-	con_c_homepage varchar(255) NULL,
 	con_fk_colecao int4 NULL,
 	con_c_link varchar(255) NULL,
-	con_c_titulo varchar(60) NULL,
+	con_c_titulo varchar(120) NULL,
 	con_fk_tipo int4 NULL,
 	con_f_popularidade float4 NULL,
 	con_c_cod varchar(15) NULL,
@@ -127,6 +129,7 @@ CREATE SEQUENCE public.conteudos_con_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
+	START 2107
 	CACHE 1
 	NO CYCLE;
 -- DROP SEQUENCE public.formacao_for_pk_seq;
@@ -186,6 +189,7 @@ CREATE SEQUENCE public.keywords_key_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
+	START 452226
 	CACHE 1
 	NO CYCLE;
 -- Drop table
@@ -256,6 +260,7 @@ CREATE SEQUENCE public.ratings_rat_pk_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
+	START 7789
 	CACHE 1
 	NO CYCLE;
 -- Drop table

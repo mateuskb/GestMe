@@ -19,14 +19,21 @@ class AppWindow(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Check for login
-        resp = Storage.r_authtoken()
-        # if not resp:
-        #     self.logout()
-        print(resp)
-    
-    def consts(self):
-        return Consts()
-    
+        auth_token = Storage.r_authtoken()
+        if not auth_token:
+            self.logout()
+        else:
+            resp = Requests.r_historico_perfil(auth_token)
+            if resp:
+                historico = resp['data'] if 'data' in resp else []
+                if historico:
+                    print(historico)
+                else:
+                    pass # Recommendation page
+            else:
+                self.logout()
+
+
     # def logout(self):
     #     resp = Storage.logoff()
     #     if resp:

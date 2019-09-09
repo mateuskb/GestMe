@@ -644,15 +644,20 @@ class DbImports:
 # Run imports
 cl = DbImports()
 
-# resp = cl.import_keywords(keywords) # DO NOT run it again
-# keywords_ids = resp['data']
+resp = cl.import_keywords(keywords) # DO NOT run it again
+keywords_ids = resp['data']
 
-# resp = cl.import_genres(genres) # DO NOT run it again
-# genres_ids = resp['data']
+resp = cl.import_genres(genres) # DO NOT run it again
+genres_ids = resp['data']
 
-# resp = cl.import_collections(collections) # DO NOT run it again
-# collections_ids = resp['data']
+resp = cl.import_collections(collections) # DO NOT run it again
+collections_ids = resp['data']
 
-# resp = cl.import_movies(movies) # DO NOT run it again
-
-print(resp)
+resp = cl.import_movies(movies) # DO NOT run it again
+movies_ids = resp['data']
+print(
+    'Number of keywords: ',len(keywords_ids),'\n'
+    'Number of genres: ',len(genres_ids),'\n'
+    'Number of collections: ',len(collections_ids),'\n'
+    'Number of movies: ',len(movies_ids)
+)

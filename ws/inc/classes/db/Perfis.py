@@ -307,6 +307,7 @@ class DbPerfis:
 
         # Vars
         id_perfil = 0
+        payload_auth = {}
 
         # Input
         auth_token = ''
@@ -317,14 +318,53 @@ class DbPerfis:
         
         # Validation
         if not auth_token:
-            data['errors']['authToken'] = 'Token não indicado.'
+            data['errors']['401'] = 'Token não indicado.'
         else:
-            auth_token = jwt.decode(auth_token, secret=consts.JWT_SECRET, algorithms=[consts.JWT_ALGORITHM])
+            try:
+                payload_auth = jwt.decode(auth_token, key=consts.JWT_SECRET, algorithms=[consts.JWT_ALGORITHM])
+            except Exception as error:
+                data['errors']['401'] = str(error)
 
-        # data['authToken'] = auth_token
-        
+        if not payload_auth:
+            data['errors']['401'] = 'Token inválido.'
+        else:
+            id_perfil = int(payload_auth['idPerfil']) if 'idPerfil' in payload_auth else 0
+            
+        if id_perfil < 1:
+            data['401'] = 'Perfil inválido.'
+            
         if not data['errors']:
-            pass
+            try:
+                cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                
+                sql = """
+                    SELECT
+                        *
+                    FROM
+                        historico
+                    WHERE
+                        his_fk_perfil = %s
+                """
+
+                bind = [
+                    id_perfil
+                ]
+
+                cur.execute(sql, bind)
+                rows = cur.fetchall()
+                    
+                if not data['errors']:
+                    data['ok'] = True
+                    data['data'] = rows
+                    self.conn.commit()
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                self.conn.rollback()
+                data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+            
+            finally:
+                if(cur):
+                    cur.close()
 
         return data
 

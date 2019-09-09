@@ -15,7 +15,7 @@ movies = {} # Add 1 to index
 # Imports
 data_kw = pd.read_csv('keywords.csv', index_col='id')
 data_rt = pd.read_csv('ratings_small.csv', index_col='movieId')
-data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)[:2]
+data_mv = pd.read_csv('movies_metadata.csv', low_memory=False)
 
 # --- Data Handling ---
 

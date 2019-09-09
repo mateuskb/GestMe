@@ -20,7 +20,7 @@ class RequestLib:
             return False
         else:
             try:
-                credentials = request.headers.get('Authorization').strip(type + ' ')
+                credentials = request.headers.get('Authorization').strip(type).strip()
                 if decode64:
                     credentials = base64.b64decode(credentials.encode())
                     credentials = json.loads(credentials)

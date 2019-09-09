@@ -22,7 +22,10 @@ class HomeWindow(BoxLayout):
         resp = Storage.r_authtoken()
         if not resp:
             self.logout()
-    
+        else:
+            print(resp)        
+        
+
     def consts(self):
         return Consts()
     

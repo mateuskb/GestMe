@@ -296,6 +296,36 @@ class DbPerfis:
                     cur.close()
 
         return data
+    
+    def r_historico_perfil(self, input):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        # Vars
+        id_perfil = 0
+
+        # Input
+        auth_token = ''
+
+        # Params
+        if input:
+            auth_token = str(input(authToken)) if 'authToken' in input else ''  
+        
+        # Validation
+        if not auth_token:
+            data['errors']['authToken'] = 'Token não indicado.'
+        else:
+            auth_token = jwt.decode(auth_token, consts.JWT_SECRET, consts.JWT_ALGORITHM)
+
+        
+        if not data['errors']:
+            pass
+
+        return data
 
     def valor_em_campo(self, campo, valor, id=0):
     

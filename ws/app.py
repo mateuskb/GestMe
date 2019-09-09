@@ -61,14 +61,14 @@ def r_historico_perfil():
     input = {}
     resp = Request_lib.get_authorization(request, type='Bearer', decode64=False)
     input['authToken'] = resp if resp else ''
-    # resp = Perfis.r_historico_perfil(input)
-    # status = 200 if resp['ok'] else 401
-    # response = app.response_class(
-    #     response= json.dumps(resp),
-    #     status=status,
-    #     mimetype='application/json'
-    # )
-    return input
+    resp = Perfis.r_historico_perfil(input)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
 
 # PAISES
 @app.route('/paises', methods=['GET'])
@@ -121,3 +121,4 @@ def r_formacao_nome():
 
 if __name__  == '__main__':
     app.run(debug=True)
+    # app.run(host='192.168.100.8', debug=True)

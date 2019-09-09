@@ -313,14 +313,15 @@ class DbPerfis:
 
         # Params
         if input:
-            auth_token = str(input(authToken)) if 'authToken' in input else ''  
+            auth_token = str(input['authToken']) if 'authToken' in input else ''  
         
         # Validation
         if not auth_token:
             data['errors']['authToken'] = 'Token não indicado.'
         else:
-            auth_token = jwt.decode(auth_token, consts.JWT_SECRET, consts.JWT_ALGORITHM)
+            auth_token = jwt.decode(auth_token, secret=consts.JWT_SECRET, algorithms=[consts.JWT_ALGORITHM])
 
+        # data['authToken'] = auth_token
         
         if not data['errors']:
             pass

@@ -56,6 +56,20 @@ def c_perfil():
     )
     return response
 
+@app.route('/perfis/perfil', methods=['POST'])
+def r_perfil():
+    input = {}
+    resp = Request_lib.get_authorization(request, type='Bearer', decode64=False)
+    input['authToken'] = resp if resp else ''
+    resp = Perfis.r_perfil(input)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
 @app.route('/perfis/historico', methods=['POST'])
 def r_historico_perfil():
     input = {}

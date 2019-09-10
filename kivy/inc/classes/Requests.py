@@ -58,6 +58,24 @@ class Requests:
         return resp
     
     @staticmethod
+    def r_perfil(auth_token):
+        input = {}
+        headers = { 
+            "Authorization": f'Bearer {auth_token}'
+        }
+
+        url = Environment.REQUEST_URL + '/perfis/perfil'
+
+        try:
+            resp = requests.request("POST", url, json=input, headers=headers)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
+
+    @staticmethod
     def r_historico_perfil(auth_token):
         input = {}
         headers = { 

@@ -19,7 +19,7 @@ class GestMeWindow(BoxLayout):
         super().__init__(**kwargs)
         resp = Storage.r_authtoken()
         if resp:
-            Clock.schedule_once(self.redirect_app_home, 1/60)
+            Clock.schedule_once(self.redirect_app_app, 1/60) # Already logged in
         
     def consts(self):
         return Consts()
@@ -30,9 +30,8 @@ class GestMeWindow(BoxLayout):
     def redirect_signup(self):
         self.parent.parent.current = 'signup_screen'
         
-    def redirect_app_home(self, dt):
-        self.parent.parent.current = 'app_home_screen'
-        # print('Should login automatically')
+    def redirect_app_app(self, dt):
+        self.parent.parent.current = 'app_app_screen'
 
 class GestMeApp(App):
 

@@ -367,6 +367,86 @@ class DbPerfis:
                     cur.close()
 
         return data
+    
+    def r_perfil(self, input):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        # Vars
+        id_perfil = 0
+        payload_auth = {}
+
+        # Input
+        auth_token = ''
+
+        # Params
+        if input:
+            auth_token = str(input['authToken']) if 'authToken' in input else ''  
+
+        # Validation
+        if not auth_token:
+            data['errors']['401'] = 'Token não indicado.'
+        else:
+            try:
+                payload_auth = jwt.decode(auth_token, key=consts.JWT_SECRET, algorithms=[consts.JWT_ALGORITHM])
+            except Exception as error:
+                data['errors']['401'] = str(error)
+
+        if not payload_auth:
+            data['errors']['401'] = 'Token inválido.'
+        else:
+            id_perfil = int(payload_auth['idPerfil']) if 'idPerfil' in payload_auth else 0
+            
+        if id_perfil < 1:
+            data['401'] = 'Perfil inválido.'
+            
+        if not data['errors']:
+            try:
+                cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                
+                sql = """
+                    SELECT
+                        per_pk,
+                        per_c_perfil,
+                        per_d_nascimento,
+                        per_c_email,
+                        per_dt_criado_em_serv,
+                        per_c_username,
+                        per_b_ativo,
+                        per_fk_pais,
+                        per_b_email_auth,
+                        per_fk_formacao
+                    FROM
+                        perfis
+                    WHERE
+                        per_pk = %s
+                """
+
+                bind = [
+                    id_perfil
+                ]
+
+                cur.execute(sql, bind)
+                rows = cur.fetchone()
+                    
+                if not data['errors']:
+                    data['ok'] = True
+                    data['data'] = rows
+                    self.conn.commit()
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                self.conn.rollback()
+                data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+            
+            finally:
+                if(cur):
+                    cur.close()
+
+        return data
 
     def valor_em_campo(self, campo, valor, id=0):
     

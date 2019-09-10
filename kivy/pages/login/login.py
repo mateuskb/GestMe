@@ -41,8 +41,7 @@ class LogInWindow(BoxLayout):
                     if resp['status'] == 200:
                         if resp['data']:
                             storage['login'] = {'authToken': resp['data']}
-                            self.clear_inputs()
-                            self.parent.parent.current = 'app_home_screen'
+                            self.redirect_app()
                     elif resp['status'] == 401:
                         info.text = error_invalid
                     else:
@@ -53,6 +52,10 @@ class LogInWindow(BoxLayout):
     def redirect_gestme(self):
         self.clear_inputs()
         self.parent.parent.current = 'gestme_screen'
+    
+    def redirect_app(self):
+        self.clear_inputs()
+        self.parent.parent.current = 'app_app_screen'
     
     def redirect_forgetpw(self):
         pass

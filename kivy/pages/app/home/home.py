@@ -21,9 +21,7 @@ class HomeWindow(BoxLayout):
         # Check for login
         resp = Storage.r_authtoken()
         if not resp:
-            self.logout()
-        else:
-            print(resp)        
+            self.logout()   
         
 
     def consts(self):

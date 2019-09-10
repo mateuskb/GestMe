@@ -3,6 +3,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
+from kivy.uix.screenmanager import Screen
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../../')
 
@@ -14,7 +15,7 @@ from inc.consts.consts import Consts
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/app/home/home.kv')
 
-class HomeWindow(BoxLayout):
+class HomeWindow(Screen):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -29,8 +30,10 @@ class HomeWindow(BoxLayout):
     
     def logout(self):
         resp = Storage.logoff()
+        self.parent.remove_widget('app_app_screen')
+        # App.get_running_app().unload_app()
         if resp:
-            self.parent.parent.current = 'gestme_screen'
+            self.parent.current = 'gestme_screen'
 
 
 class HomeApp(App):

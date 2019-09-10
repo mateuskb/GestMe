@@ -1,4 +1,4 @@
-#:kivy 1.11
+#:kivy 1.8.0
 <SignupokWindow>:
     id: main_win
     orientation: 'vertical'
@@ -13,29 +13,31 @@
             size: self.size
             pos: self.pos
 
-            
     BoxLayout:
-        orientation: 'vertical'
-        padding: main_win.space_x, 10
-        spacing: 20
-       
-        Label:
-            text:'Registration successful!'
-            bold: True
-            font_size: 35
-        Label:
-            text: "We're happy to have you with us :)"
-            bold: True
-            font_size: 20
-    
-        Button:
-            text: 'Home'
-            size_hint_y: None
-            height: 40
-            background_color: root.consts().COLOR_MAIN[1]
-            background_normal: ''
-            on_release: root.redirect_main()
-
-        Label:
-            id:sp2
+        orientation:'vertical' 
+               
+        BoxLayout:
+            orientation: 'vertical'
+            padding: main_win.space_x, 10
+            spacing: 20
         
+            Label:
+                text:'Registration successful!'
+                bold: True
+                font_size: 35
+            Label:
+                text: "We're happy to have you with us :)"
+                bold: True
+                font_size: 20
+        
+            Button:
+                text: 'Home'
+                size_hint_y: None
+                height: 40
+                background_color: root.consts().COLOR_MAIN[1]
+                background_normal: ''
+                on_release: root.redirect_main()
+
+            Label:
+                id:sp2
+            

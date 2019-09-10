@@ -2,6 +2,8 @@ import sys, os
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../')
 
@@ -12,7 +14,7 @@ from inc.consts.consts import Consts
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/signup/signupok.kv')
 
-class SignupokWindow(BoxLayout):
+class SignupokWindow(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -21,7 +23,7 @@ class SignupokWindow(BoxLayout):
         return Consts()
     
     def redirect_main(self):
-        self.parent.parent.current = 'gestme_screen'
+        self.parent.current = 'gestme_screen'
 
 
 class SignupokApp(App):

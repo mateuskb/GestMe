@@ -5,6 +5,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.dropdown import DropDown
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.uix.screenmanager import Screen
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../')
 
@@ -14,10 +15,11 @@ from inc.classes.Requests import Requests
 from inc.classes.DateInput import DateInput
 from inc.consts.consts import Consts
 
+
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/signup/signup.kv')
 
-class SignUpWindow(BoxLayout):
+class SignUpWindow(Screen):
 
     Window.size = (1100, 700)
 
@@ -30,7 +32,7 @@ class SignUpWindow(BoxLayout):
         return Consts()
 
     def redirect_gestme(self):
-        self.parent.parent.current = 'gestme_screen'
+        self.parent.current = 'gestme_screen'
     
     def validate_user(self):
         name = self.ids.nam_field.text
@@ -73,7 +75,7 @@ class SignUpWindow(BoxLayout):
                                                 if resp['ok']:
                                                     if resp['data']:
                                                         self.clear_inputs()
-                                                        self.parent.parent.current = 'signupok_screen'
+                                                        self.parent.current = 'signupok_screen'
                                                     else:
                                                         for error in resp['errors'].values():
                                                             info.text = info.text + f'{error} \n'  

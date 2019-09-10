@@ -3,6 +3,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
+from kivy.uix.screenmanager import Screen
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../')
 
@@ -13,7 +14,7 @@ from inc.consts.consts import Consts
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/login/login.kv')
 
-class LogInWindow(BoxLayout):
+class LogInWindow(Screen):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -51,11 +52,12 @@ class LogInWindow(BoxLayout):
     
     def redirect_gestme(self):
         self.clear_inputs()
-        self.parent.parent.current = 'gestme_screen'
+        self.parent.current = 'gestme_screen'
     
     def redirect_app(self):
         self.clear_inputs()
-        self.parent.parent.current = 'app_app_screen'
+        App.get_running_app().load_app()
+        self.parent.current = 'app_app_screen'
     
     def redirect_forgetpw(self):
         pass

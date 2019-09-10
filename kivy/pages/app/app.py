@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
 from kivy.clock import Clock
-
+from kivy.uix.screenmanager import Screen
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../')
 
@@ -16,13 +16,12 @@ from inc.consts.consts import Consts
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/app/app.kv')
 
-class AppWindow(BoxLayout):
+class AppWindow(Screen):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Check for login
         auth_token = Storage.r_authtoken()
-        print(auth_token)
         if not auth_token:
             self.logout()
         else:
@@ -40,7 +39,7 @@ class AppWindow(BoxLayout):
                                     if resp['status'] == 200:
                                         historico = resp['data'] if 'data' in resp else []
                                         if historico:
-                                            Clock.schedule_once(self.redirect_app_home, 1/60)
+                                            Clock.schedule_once(self.redirect_app_home, 2/60)
                                         else:
                                             pass # Recommendation Page to do
                                     else:
@@ -60,12 +59,12 @@ class AppWindow(BoxLayout):
 
 
     def redirect_app_home(self, dt):
-        self.parent.parent.current = 'app_home_screen'
+        self.parent.current = 'app_home_screen'
 
     def logout(self):
         resp = Storage.logoff()
         if resp:
-            self.parent.parent.current = 'gestme_screen'
+            self.parent.current = 'gestme_screen'
 
 
 class AppApp(App):

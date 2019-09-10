@@ -11,6 +11,7 @@ BASE_PATH = os.path.abspath(__file__+ '/../../../')
 sys.path.append(BASE_PATH)
 from inc.consts.consts import Consts
 from inc.classes.Storage import Storage
+# from pages.app.app import AppWindow
 
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/gestme/gestme.kv')
@@ -35,6 +36,8 @@ class GestMeWindow(Screen):
     def redirect_app_app(self, dt):
         App.get_running_app().load_app()
         self.parent.current = 'app_app_screen'
+        # self.parent.switch_to(AppWindow(name='app_app_screen'))
+
 
 class GestMeApp(App):
 

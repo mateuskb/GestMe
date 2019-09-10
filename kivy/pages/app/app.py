@@ -12,6 +12,7 @@ sys.path.append(BASE_PATH)
 from inc.classes.Requests import Requests
 from inc.classes.Storage import Storage
 from inc.consts.consts import Consts
+# from pages.app.home.home import HomeWindow
 
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/app/app.kv')
@@ -39,7 +40,7 @@ class AppWindow(Screen):
                                     if resp['status'] == 200:
                                         historico = resp['data'] if 'data' in resp else []
                                         if historico:
-                                            Clock.schedule_once(self.redirect_app_home, 2/60)
+                                            Clock.schedule_once(self.redirect_app_home, 4)
                                         else:
                                             pass # Recommendation Page to do
                                     else:
@@ -59,6 +60,7 @@ class AppWindow(Screen):
 
 
     def redirect_app_home(self, dt):
+        # self.parent.switch_to(HomeWindow(name='app_home_screen'))
         self.parent.current = 'app_home_screen'
 
     def logout(self):

@@ -30,8 +30,6 @@ class HomeWindow(Screen):
     
     def logout(self):
         resp = Storage.logoff()
-        self.parent.remove_widget('app_app_screen')
-        # App.get_running_app().unload_app()
         if resp:
             self.parent.current = 'gestme_screen'
 

@@ -45,25 +45,38 @@ from pages.app.home.home import HomeWindow
 #         self.ids.app_home_screen.add_widget(self.app_home_widget)
 
 sm = ScreenManager(transition=NoTransition())
-sm.add_widget(GestMeWindow(name='gestme_screen'))
-sm.add_widget(LogInWindow(name='login_screen'))
-sm.add_widget(SignUpWindow(name='signup_screen'))
-sm.add_widget(SignupokWindow(name='signupok_screen'))
-# sm.add_widget(HomeWindow(name='app_home_screen'))
 
         
 class MainApp(App):
 
     def build(self):
+        self.load_launcher()
         return sm
+    
+    def clear_widgets(self, screens=None):
+        if screens is None:
+            screens = sm.screens
+
+        for screen in screens[:]:
+            sm.remove_widget(screen)
+
+    def load_launcher(self):
+        sm.add_widget(GestMeWindow(name='gestme_screen'))
+        sm.add_widget(LogInWindow(name='login_screen'))
+        sm.add_widget(SignUpWindow(name='signup_screen'))
+        sm.add_widget(SignupokWindow(name='signupok_screen'))
+        # print("Load_pages : ", sm.screens)
 
     def load_app(self):
         sm.add_widget(AppWindow(name='app_app_screen'))
         sm.add_widget(HomeWindow(name='app_home_screen'))
-    
+        # print("Load_app : ", sm.screens)
+
     def unload_app(self):
-        sm.remove_widget(AppWindow(name='app_app_screen'))
-        sm.remove_widget(HomeWindow(name='app_home_screen'))
+        self.clear_widgets()
+        self.load_launcher()
+        # print("Unload : ", sm.screens)
+    
 
 if __name__ == '__main__':
     MainApp().run()

@@ -40,7 +40,8 @@ class AppWindow(Screen):
                                     if resp['status'] == 200:
                                         historico = resp['data'] if 'data' in resp else []
                                         if historico:
-                                            Clock.schedule_once(self.redirect_app_home, 4)
+                                            Clock.schedule_once(self.redirect_app_home, 2/30)
+                                            pass
                                         else:
                                             pass # Recommendation Page to do
                                     else:
@@ -60,13 +61,13 @@ class AppWindow(Screen):
 
 
     def redirect_app_home(self, dt):
-        # self.parent.switch_to(HomeWindow(name='app_home_screen'))
         self.parent.current = 'app_home_screen'
 
     def logout(self):
         resp = Storage.logoff()
         if resp:
             self.parent.current = 'gestme_screen'
+            App.get_running_app().unload_app()        
 
 
 class AppApp(App):

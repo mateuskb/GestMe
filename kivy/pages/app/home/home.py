@@ -31,7 +31,7 @@ class HomeWindow(Screen):
     def logout(self):
         resp = Storage.logoff()
         if resp:
-            self.parent.current = 'gestme_screen'
+            App.get_running_app().unload_app()        
 
 
 class HomeApp(App):

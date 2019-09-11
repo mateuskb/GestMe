@@ -72,6 +72,7 @@ class LogInWindow(Screen):
 class LogInApp(App):
 
     def build(self):
+        print('oi')
         return LogInWindow()
 
 if __name__ == '__main__':

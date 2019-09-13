@@ -41,6 +41,14 @@
                 font_size: 10
                 on_release: root.logout()
 
+        AsyncImage: 
+            source: root.image_path
+            size_hint: .5, 1        
+        
+
+        FlatButton:
+            text:'Change Image'
+            on_release: root.change_image('/rhIRbceoE9lR4veEXuwCC2wARtG.jpg')
         Label:
             id:sp2
         

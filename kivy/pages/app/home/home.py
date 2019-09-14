@@ -25,40 +25,40 @@ class HomeWindow(Screen):
     mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv')[:1]
 
     base_path = 'http://image.tmdb.org/t/p/w185'
-    
+
     images_urls = [
-        StringProperty(''),
-        StringProperty('')
+        StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'),
+        StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg')
     ]
-    
-    a = 0
-    for url in images_urls:
-        images_urls[a] = 'http://image.tmdb.org/t/p/w185//A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'
-        a += 1
+
+    # a = 0
+    # for url in images_urls:
+    #     images_urls[a] = 'http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'
+    #     a += 1
+    print(type(images_urls[0]))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Check for login
         resp = Storage.r_authtoken()
         if not resp:
-            self.logout()   
-            
+            self.logout()
+
 
     def consts(self):
         return Consts()
-    
+
     def load_movies(self):
-        print(self.images_urls[0])
 
         for index, row in self.mv_data.iterrows():
             self.images_urls[index] = self.base_path + row['con_c_image_path']
+            super(AsyncImage, self).reload()
 
-        print(self.images_urls[0])
 
     def logout(self):
         resp = Storage.logoff()
         if resp:
-            App.get_running_app().unload_app()        
+            App.get_running_app().unload_app()
 
 
 class HomeApp(App):

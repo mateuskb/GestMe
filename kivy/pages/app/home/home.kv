@@ -49,9 +49,10 @@
         BoxLayout:
             orientation:'vertical'
             
-            # ImageButton:
-            #     source: root.image_url
-            #     on_release: root.on_press()
+            ImageButton:
+                id: image
+                source: root.images_urls[0]
+                on_release: root.load_movies(0)
 
             Label:
                 id:sp2

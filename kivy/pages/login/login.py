@@ -4,6 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../')
 

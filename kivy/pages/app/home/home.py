@@ -27,14 +27,14 @@ class HomeWindow(Screen):
     base_path = 'http://image.tmdb.org/t/p/w185'
 
     images_urls = [
-        StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'),
-        StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg')
+        StringProperty(''),
+        StringProperty('')
     ]
 
-    # a = 0
-    # for url in images_urls:
-    #     images_urls[a] = 'http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'
-    #     a += 1
+    a = 0
+    for url in images_urls:
+        images_urls[a] = 'http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'
+        a += 1
     print(type(images_urls[0]))
 
     def __init__(self, **kwargs):

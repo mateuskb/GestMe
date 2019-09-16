@@ -10,7 +10,7 @@
     
     canvas.before:
         Color: 
-            rgba: root.consts().COLOR_MAIN[0]
+            rgba: root.consts().COLOR_APP[0]
         
         Rectangle:
             size: self.size
@@ -20,40 +20,37 @@
         orientation:'vertical'
         BoxLayout:
             size_hint_y: None
-            height: 50
+            height: 100
             
             canvas.before:
                 Color: 
-                    rgba: root.consts().COLOR_MAIN[1]
+                    rgba: root.consts().COLOR_APP[0]
                 
                 Rectangle:
                     size: self.size
                     pos: self.pos
             
             Label:
-                text:'Homepage'
+                text:'GestMe'
                 bold: True
                 size_hint_x: 0.9
+                color: root.consts().COLOR_APP[1]
+                font_size: '70dp'
 
-            FlatButton:
+            HoverButton:
                 size_hint_x: 0.1
                 text: 'Log Out'
                 font_size: 10
                 on_release: root.logout()
+                
 
         BoxLayout:
             orientation:'vertical'
             
-            AsyncImage: 
-                source: root.images_urls[0]
-                nocache: True 
-    
-            # AsyncImage: 
-            #     source: root.images_urls[1]
-    
-            FlatButton:
-                text:'Load_images'
-                on_release: root.load_movies()
+            # ImageButton:
+            #     source: root.image_url
+            #     on_release: root.on_press()
+
             Label:
                 id:sp2
         

@@ -5,6 +5,8 @@ class Consts:
     # COLORS
 
     COLOR_MAIN = [(.06, .6, .6, 1), (.06, .45, .45, 1)]
+   
+    COLOR_APP = [(.06, .06, .06, 1), (.06, .45, .45, 1)]
 
     BASE_PATH = os.path.abspath(__file__+ '/../../../') 
 

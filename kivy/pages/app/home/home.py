@@ -1,10 +1,13 @@
 import sys, os
 from kivy.app import App
 from kivy.lang import Builder
+from kivy.uix.button import Button
 from kivy.uix.widget import Widget
-from kivy.uix.image import AsyncImage
+from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
-from kivy.properties import StringProperty, ListProperty
+from kivy.properties import StringProperty
+from kivy.uix.behaviors import ButtonBehavior, HoverBehavior  
+from kivy.uix.image import AsyncImage, Image  
 import pandas as pd
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../../')
@@ -17,43 +20,49 @@ from inc.consts.consts import Consts
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/app/home/home.kv')
 
-# class FullImage(Image):
-#         pass
+class HoverButton(Button, HoverBehavior):  
+    def on_enter(self, *args):
+        Window.set_system_cursor("hand")
+
+    def on_leave(self, *args):
+        Window.set_system_cursor("arrow")
+
+class ImageButton(ButtonBehavior, HoverBehavior):  
+    pass
 
 class HomeWindow(Screen):
 
-    mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv')[:1]
+    # mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv')[:1]
+    # base_path = 'http://image.tmdb.org/t/p/w185'
+    # images_urls = [
+    #     StringProperty(''),
+    #     StringProperty('')
+    # ]
+    # a = 0
+    # for image in images_urls:
+    #     images_urls[a] = 'http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'  
+    #     a += 1
 
-    base_path = 'http://image.tmdb.org/t/p/w185'
-
-    images_urls = [
-        StringProperty(''),
-        StringProperty('')
-    ]
-
-    a = 0
-    for url in images_urls:
-        images_urls[a] = 'http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'
-        a += 1
-    print(type(images_urls[0]))
-
+    image_url = StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg')
+    
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(HomeWindow, self).__init__(**kwargs)
         # Check for login
         resp = Storage.r_authtoken()
         if not resp:
             self.logout()
+        self.add_widget(ImageButton(source='http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'))
+        # self.load_movies()
 
-
+    # def load_movies(self):
+    #     for index, row in self.mv_data.iterrows():
+    #         self.images_urls[index] = self.base_path + row['con_c_image_path']
+    
     def consts(self):
         return Consts()
 
-    def load_movies(self):
-
-        for index, row in self.mv_data.iterrows():
-            self.images_urls[index] = self.base_path + row['con_c_image_path']
-            super(AsyncImage, self).reload()
-
+    def on_press(self):  
+        print ('pressed')
 
     def logout(self):
         resp = Storage.logoff()

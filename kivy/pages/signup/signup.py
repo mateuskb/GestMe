@@ -11,8 +11,9 @@ BASE_PATH = os.path.abspath(__file__+ '/../../../')
 
 sys.path.append(BASE_PATH)
 
+from inc.classes.Buttons import HoverButton, FlatButton
 from inc.classes.Requests import Requests
-from inc.classes.DateInput import DateInput
+from inc.classes.Inputs import DateInput
 from inc.consts.consts import Consts
 
 
@@ -22,8 +23,6 @@ Builder.load_file(BASE_PATH + '/pages/signup/signup.kv')
 class SignUpWindow(Screen):
 
     Window.size = (1100, 700)
-
-    DateInput = DateInput()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -1,9 +1,6 @@
 #:kivy 1.8.0
 #:import Factory kivy.factory.Factory
 
-<FlatButton@ButtonBehavior+Label>:
-    font_size: 20
-
 <SpinnerOption>:
     size:  root.width, 40
     background_color: (.06, .45, .45, 1)
@@ -143,7 +140,7 @@
                 size_hint_y: None
                 height: 20
         
-            Button:
+            HoverButton:
                 text: 'Confirm'
                 size_hint_y: None
                 height: 40

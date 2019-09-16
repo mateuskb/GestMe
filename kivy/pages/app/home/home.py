@@ -1,34 +1,22 @@
 import sys, os
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty
-from kivy.uix.behaviors import ButtonBehavior, HoverBehavior  
-from kivy.uix.image import AsyncImage, Image  
 import pandas as pd
 
 BASE_PATH = os.path.abspath(__file__+ '/../../../../')
 
 sys.path.append(BASE_PATH)
+from inc.classes.Buttons import HoverButton, ImageButton
 from inc.classes.Requests import Requests
 from inc.classes.Storage import Storage
 from inc.consts.consts import Consts
 
+
 # Load KV file
 Builder.load_file(BASE_PATH + '/pages/app/home/home.kv')
 
-class HoverButton(Button, HoverBehavior):  
-    def on_enter(self, *args):
-        Window.set_system_cursor("hand")
-
-    def on_leave(self, *args):
-        Window.set_system_cursor("arrow")
-
-class ImageButton(ButtonBehavior, HoverBehavior):  
-    pass
 
 class HomeWindow(Screen):
 
@@ -43,15 +31,15 @@ class HomeWindow(Screen):
     #     images_urls[a] = 'http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'  
     #     a += 1
 
-    image_url = StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg')
+    # image_url = StringProperty('http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg')
     
     def __init__(self, **kwargs):
         super(HomeWindow, self).__init__(**kwargs)
         # Check for login
         resp = Storage.r_authtoken()
-        if not resp:
-            self.logout()
-        self.add_widget(ImageButton(source='http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'))
+        if not auth_token:
+            Clock.schedule_once(self.logout, 2/30)
+        # self.add_widget(ImageButton(source='http:/image.tmdb.org/t/p/w185/A3aYGp8LLxuFdzG2ETnhfbWPk7h.jpg'))
         # self.load_movies()
 
     # def load_movies(self):

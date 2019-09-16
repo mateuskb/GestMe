@@ -1,7 +1,4 @@
 #:kivy 1.8.0
-<FlatButton@ButtonBehavior+Label>:
-    font_size: 20
-
 <LogInWindow>:
     id: main_win
     orientation: 'vertical'
@@ -35,10 +32,6 @@
                 text:'Log In'
                 bold: True
                 size_hint_x: 0.9
-                
-            # FlatButton:
-            #     text: 'X'
-            #     size_hint_x: 0.1
         
         BoxLayout:
             orientation: 'vertical'
@@ -81,7 +74,7 @@
                 size_hint_y: None
                 height: 40
 
-            Button:
+            HoverButton:
                 text: 'Log In'
                 size_hint_y: None
                 height: 40

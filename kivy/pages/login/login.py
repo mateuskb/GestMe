@@ -10,6 +10,7 @@ BASE_PATH = os.path.abspath(__file__+ '/../../../')
 sys.path.append(BASE_PATH)
 from inc.classes.Requests import Requests
 from inc.consts.consts import Consts
+from inc.classes.Buttons import HoverButton, FlatButton
 # from pages.app.app import AppWindow
 
 # Load KV file

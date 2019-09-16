@@ -24,7 +24,7 @@ class AppWindow(Screen):
         # Check for login
         auth_token = Storage.r_authtoken()
         if not auth_token:
-            self.logout()
+            Clock.schedule_once(self.logout, 2/30)
         else:
             resp = Requests.r_perfil(auth_token)
             if resp:
@@ -45,29 +45,29 @@ class AppWindow(Screen):
                                         else:
                                             pass # Recommendation Page to do
                                     else:
-                                        self.logout()
+                                        Clock.schedule_once(self.logout, 2/30)
                                 else:
-                                    self.logout()
+                                    Clock.schedule_once(self.logout, 2/30)
                             else:
                                 pass # Email auth page TO DO
                         else:
-                            self.logout()
+                            Clock.schedule_once(self.logout, 2/30)
                     else:
-                        self.logout()
+                        Clock.schedule_once(self.logout, 2/30)
                 else:
-                    self.logout()
+                    Clock.schedule_once(self.logout, 2/30)
             else:
-                self.logout()
+                Clock.schedule_once(self.logout, 2/30)
 
 
     def redirect_app_home(self, dt):
         self.parent.current = 'app_home_screen'
 
-    def logout(self):
+    def logout(self, dt):
         resp = Storage.logoff()
         if resp:
-            self.parent.current = 'gestme_screen'
             App.get_running_app().unload_app()        
+            self.parent.current = 'gestme_screen'
 
 
 class AppApp(App):

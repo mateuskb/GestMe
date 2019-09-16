@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import Screen
 BASE_PATH = os.path.abspath(__file__+ '/../../../')
 
 sys.path.append(BASE_PATH)
+from inc.classes.Buttons import HoverButton
 from inc.consts.consts import Consts
 from inc.classes.Storage import Storage
 # from pages.app.app import AppWindow

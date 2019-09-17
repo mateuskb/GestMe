@@ -4,6 +4,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty
 from kivy.uix.image import AsyncImage
+from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
 import pandas as pd
 
@@ -22,17 +23,19 @@ Builder.load_file(BASE_PATH + '/pages/app/home/home.kv')
 
 class HomeWindow(Screen):
 
-    mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv')[:2]
+    mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv')
+    mv_data = mv_data.where((pd.notnull(mv_data)), None)
+
     default_image = BASE_PATH + '/inc/data/assets/movie_bck_default.jpg'
     base_path = 'http://image.tmdb.org/t/p/w185'
-    images_urls = [
-        StringProperty(None),
-        StringProperty(None)
-    ]
-    a = 0
-    for image in images_urls:
-        images_urls[a] = default_image  
-        a += 1
+    # images_urls = [
+    #     StringProperty(None),
+    #     StringProperty(None)
+    # ]
+    # a = 0
+    # for image in images_urls:
+    #     images_urls[a] = default_image  
+    #     a += 1
 
     
     def __init__(self, **kwargs):
@@ -42,15 +45,26 @@ class HomeWindow(Screen):
         if not auth_token:
             Clock.schedule_once(self.logout, 2/30)
 
-        # Clock.schedule_once(self.load_movies, 2/30)
+        Clock.schedule_once(self.load_movies, 3/30)
 
 
     def load_movies(self, dt):
+        print('a')
+        layout = self.ids.grid_lay
+        # layout.add_widget(ImageButton(source=BASE_PATH + '/inc/data/assets/movie_bck_default.jpg'))
+
         for index, row in self.mv_data.iterrows():
-            self.images_urls[index] = self.base_path + row['con_c_image_path']
+            if 'con_c_image_path' in row:
+                if row['con_c_image_path']:
+                    layout.add_widget(ImageButton(source=self.base_path + row['con_c_image_path'], size_hint_x=None))
+                    # a.bind(on_press=self.image_press(0))
+                else:
+                    layout.add_widget(ImageButton(source=self.default_image))
+            else:
+                layout.add_widget(ImageButton(source=self.default_image))
         
-        self.ids.image.reload()
-        print(self.images_urls)
+        # self.ids.image.reload()
+        # self.ids.image.source = self.images_urls[0]
     
     def consts(self):
         return Consts()

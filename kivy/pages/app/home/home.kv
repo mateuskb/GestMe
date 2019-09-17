@@ -1,7 +1,4 @@
 #:kivy 1.8.0
-<FlatButton@ButtonBehavior+Label>:
-    font_size: 20
-
 <HomeWindow>:
     id: main_win
     orientation: 'vertical'
@@ -18,6 +15,7 @@
 
     BoxLayout:
         orientation:'vertical'
+
         BoxLayout:
             size_hint_y: None
             height: 100
@@ -45,7 +43,62 @@
                 background_normal: ''
                 on_release: root.logout()
                 
+        BoxLayout:
+            id:cont_box
+            size_hint_y: None
+            
+            TabbedPanel:
+                id:tabs_home
+                do_default_tab: False
+                tab_width: self.size[0] / 3
 
+                canvas:
+                    Color:
+                        rgb: root.consts().COLOR_APP[0]
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                TabbedPanelItem:
+                    background_color: root.consts().COLOR_APP[1]
+                    background_down: ""
+                    # background_normal: ""
+                    text: 'Home'
+                    Label:
+                        text: 'First tab content area'
+                TabbedPanelItem:
+                    background_color: root.consts().COLOR_APP[1]
+                    background_down: ""
+                    # background_normal: ""
+                    text: 'Movies'
+                    Label:
+                        text: 'Movies tab content area'
+                TabbedPanelItem:
+                    background_color: root.consts().COLOR_APP[1]
+                    background_down: ""
+                    # background_normal: ""
+                    text: 'Books'
+                    Label:
+                        text: 'Books tab content area'
+                # FlatButton:
+                #     text: 'Home'
+                #     canvas.before:
+                #         Color:
+                #             rgba: root.consts().COLOR_APP[1]
+                #         Line:
+                #             width: 2
+                #             # rectangle: self.x, self.y, self.width, self.height
+
+
+                # FlatButton:
+                #     text: 'Movies'
+                #     # on_press:
+
+                # FlatButton:
+                #     text: 'Books'
+                #     # on_press:
+
+            
         BoxLayout:
             orientation:'vertical'
             
@@ -55,61 +108,7 @@
                 row_default_height:200
                 col_default_width:10
 
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies()
-
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
                 
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-                
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
-
-                # ImageButton:
-                #     source: root.default_image
-                #     on_release: root.load_movies(0)
 
             
             Label:

@@ -10,4 +10,6 @@ class Consts:
 
     BASE_PATH = os.path.abspath(__file__+ '/../../../') 
 
+    BASE_IMAGE_MOVIE_URL = 'http://image.tmdb.org/t/p/w185'
+
     JSON_PATH = BASE_PATH + '/storage/storage.json'

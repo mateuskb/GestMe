@@ -23,11 +23,11 @@ Builder.load_file(BASE_PATH + '/pages/app/home/home.kv')
 
 class HomeWindow(Screen):
 
-    mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv')
+    mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv') # TO DO
     mv_data = mv_data.where((pd.notnull(mv_data)), None)
 
-    default_image = BASE_PATH + '/inc/data/assets/movie_bck_default.jpg'
-    base_path = 'http://image.tmdb.org/t/p/w185'
+    default_image = BASE_PATH + '/inc/assets/movie_bck_default.jpg'
+   
     # images_urls = [
     #     StringProperty(None),
     #     StringProperty(None)
@@ -51,17 +51,16 @@ class HomeWindow(Screen):
     def load_movies(self, dt):
         print('a')
         layout = self.ids.grid_lay
-        # layout.add_widget(ImageButton(source=BASE_PATH + '/inc/data/assets/movie_bck_default.jpg'))
 
         for index, row in self.mv_data.iterrows():
             if 'con_c_image_path' in row:
                 if row['con_c_image_path']:
-                    layout.add_widget(ImageButton(source=self.base_path + row['con_c_image_path'], size_hint_x=None))
+                    layout.add_widget(ImageButton(source=Consts.BASE_IMAGE_MOVIE_URL + row['con_c_image_path'], size_hint_x=None))
                     # a.bind(on_press=self.image_press(0))
                 else:
-                    layout.add_widget(ImageButton(source=self.default_image))
+                    layout.add_widget(ImageButton(source=self.default_image, size_hint_x=None))
             else:
-                layout.add_widget(ImageButton(source=self.default_image))
+                layout.add_widget(ImageButton(source=self.default_image, size_hint_x=None))
         
         # self.ids.image.reload()
         # self.ids.image.source = self.images_urls[0]

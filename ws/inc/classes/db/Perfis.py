@@ -417,6 +417,7 @@ class DbPerfis:
                         per_dt_criado_em_serv,
                         per_c_username,
                         per_b_ativo,
+                        per_c_avatar,
                         per_fk_pais,
                         per_b_email_auth,
                         per_fk_formacao

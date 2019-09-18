@@ -45,12 +45,13 @@
                 
         BoxLayout:
             id:cont_box
-            size_hint_y: None
             
             TabbedPanel:
                 id:tabs_home
                 do_default_tab: False
-                tab_width: self.size[0] / 3
+                background_color: root.consts().COLOR_APP[1]
+                tab_width: self.size[0] / 2
+                tab_pos:'top_mid'
 
                 canvas:
                     Color:
@@ -60,58 +61,46 @@
                         pos: self.pos
 
                 TabbedPanelItem:
+                    id:tb_home
                     background_color: root.consts().COLOR_APP[1]
-                    background_down: ""
-                    # background_normal: ""
-                    text: 'Home'
-                    Label:
-                        text: 'First tab content area'
-                TabbedPanelItem:
-                    background_color: root.consts().COLOR_APP[1]
-                    background_down: ""
-                    # background_normal: ""
-                    text: 'Movies'
-                    Label:
-                        text: 'Movies tab content area'
-                TabbedPanelItem:
-                    background_color: root.consts().COLOR_APP[1]
-                    background_down: ""
-                    # background_normal: ""
-                    text: 'Books'
-                    Label:
-                        text: 'Books tab content area'
-                # FlatButton:
-                #     text: 'Home'
-                #     canvas.before:
-                #         Color:
-                #             rgba: root.consts().COLOR_APP[1]
-                #         Line:
-                #             width: 2
-                #             # rectangle: self.x, self.y, self.width, self.height
+                    background_down: ''
+                    text:'Home'
 
+                    BoxLayout:
+                        orientation:'vertical'
 
-                # FlatButton:
-                #     text: 'Movies'
-                #     # on_press:
+                        GridLayout:
+                            cols:2
 
-                # FlatButton:
-                #     text: 'Books'
-                #     # on_press:
+                            BoxLayout:
+                                orientation:'vertical'
 
-            
-        BoxLayout:
-            orientation:'vertical'
-            
-            GridLayout:
-                id:grid_lay
-                cols:10
-                row_default_height:200
-                col_default_width:10
+                                BoxLayout:
+                                    orientation:'horizontal'
+                                    
+                                    Image:
+                                        id: avatar_img
+                                        source: root.avatar
+                                        
+                                    Label:
+                                        id: name_label
+                                        text: ''
 
-                
+                            BoxLayout:
+                                orientation:'vertical'
 
-            
-            Label:
-                id:sp2
+                                Label:
+                                    text:'Latest rated content'
+                # TabbedPanelItem:
+                #     id:tb_movies
+                #     background_color: root.consts().COLOR_APP[1]
+                #     background_down: ""
+                #     # text:'Movies'
+                    
+                # TabbedPanelItem:
+                #     id:tb_books
+                #     background_color: root.consts().COLOR_APP[1]
+                #     background_down: ""
+                #     # background_normal: ""
 
         

@@ -26,7 +26,7 @@ class AppWindow(Screen):
         if not auth_token:
             Clock.schedule_once(self.logout, 2/30)
         else:
-            resp = Requests.r_perfil(auth_token)
+            resp = Requests.r_perfil()
             if resp:
                 if resp['status'] == 200:
                     perfil = resp['data'] if 'data' in resp else {}
@@ -35,7 +35,7 @@ class AppWindow(Screen):
                         ativo = perfil['per_b_ativo'] if 'per_b_ativo' in perfil else False
                         if ativo:
                             if email_auth:
-                                resp = Requests.r_historico_perfil(auth_token)
+                                resp = Requests.r_historico_perfil()
                                 if resp:
                                     if resp['status'] == 200:
                                         historico = resp['data'] if 'data' in resp else []

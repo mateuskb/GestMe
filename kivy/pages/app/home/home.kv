@@ -66,31 +66,99 @@
                     background_down: ''
                     text:'Home'
 
-                    BoxLayout:
-                        orientation:'vertical'
+                    AnchorLayout:
+                        anchor_x: 'center'
+                        anchor_y: 'top'
 
-                        GridLayout:
-                            cols:2
+                        BoxLayout:
+                            size_hint:(1, 1)
+                            orientation:'vertical'
+                            size_hint_min: (800,600)
+                            size_hint_max: (800,600)
+                            padding: 10
 
-                            BoxLayout:
-                                orientation:'vertical'
+                            GridLayout:
+                                rows:2
 
                                 BoxLayout:
                                     orientation:'horizontal'
+                                    padding: 30
+
+                                    AnchorLayout:
+                                        anchor_x: 'left'
+                                        anchor_y: 'center'
                                     
-                                    Image:
-                                        id: avatar_img
-                                        source: root.avatar
+                                        Image:
+                                            id: avatar_img
+                                            source: root.avatar 
+                                            size_hint_x: None
+                                            width: 200
+                                    
+                                    BoxLayout:
+                                        orientation:'vertical'    
+                                            
+                                        Label:
+                                            id: name_label
+                                            text: ''
+                                            font_size: 30
                                         
-                                    Label:
-                                        id: name_label
-                                        text: ''
+                                        AnchorLayout:
+                                            anchor_x: 'left'
+                                            anchor_y: 'top'
 
-                            BoxLayout:
-                                orientation:'vertical'
+                                            BoxLayout:
+                                                orientation:'vertical'
+                                                size_hint_x: 0.6
+                                                size_hint_y: 0.5
+                                                    
+                                                Label:
+                                                    id: info_label
+                                                    text: ''
+                                                    font_size: 18
 
-                                Label:
-                                    text:'Latest rated content'
+                                        BoxLayout:
+                                            orientation:'horizontal'
+
+                                            HoverButton:
+                                                text:'Update Profile'
+                                                background_color: root.consts().COLOR_MAIN[0]
+                                            
+                                            HoverButton:
+                                                text:'Show favorites'
+                                                background_color: root.consts().COLOR_MAIN[0]
+                                            
+                                BoxLayout:
+                                    orientation:'horizontal'
+                                    padding: 30
+
+                                    GridLayout:
+                                        cols:3
+
+                                        AnchorLayout:
+                                            anchor_x: 'left'
+                                            anchor_y: 'top'
+                                                
+                                            Label:
+                                                size_hint: (None, None)
+                                                text:'Latest rated content'
+                                                font_size: 22
+                                            
+                                        BoxLayout:
+                                            orientation:'horizontal'
+
+                                            ImageButton:
+                                                id: last_content_image
+                                                source: root.default_image
+
+                                        BoxLayout:
+                                            orientation:'vertical' 
+                                            
+                                            Label:
+                                                id: last_content_info
+                                                text: ''
+                                                color: root.consts().COLOR_MAIN[0]
+
+                                            
                 # TabbedPanelItem:
                 #     id:tb_movies
                 #     background_color: root.consts().COLOR_APP[1]

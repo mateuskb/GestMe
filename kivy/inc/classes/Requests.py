@@ -7,6 +7,7 @@ BASE_PATH = os.path.abspath(__file__+ '/../../')
 
 sys.path.append(BASE_PATH)
 from inc.environment import Environment
+from inc.classes.Storage import Storage
 
 class Requests:
 
@@ -58,40 +59,73 @@ class Requests:
         return resp
     
     @staticmethod
-    def r_perfil(auth_token):
-        input = {}
-        headers = { 
-            "Authorization": f'Bearer {auth_token}'
-        }
+    def r_perfil():
+        auth_token = Storage.r_authtoken()
+        if auth_token:
+            input = {}
+            headers = { 
+                "Authorization": f'Bearer {auth_token}'
+            }
 
-        url = Environment.REQUEST_URL + '/perfis/perfil'
+            url = Environment.REQUEST_URL + '/perfis/perfil'
 
-        try:
-            resp = requests.request("POST", url, json=input, headers=headers)
-            status = resp.status_code
-            resp = resp.json()
-            resp['status'] = status
-        except:
-            resp = False
-        return resp
+            try:
+                resp = requests.request("POST", url, json=input, headers=headers)
+                status = resp.status_code
+                resp = resp.json()
+                resp['status'] = status
+            except:
+                resp = False
+            
+            return resp
+        else:
+            return False
 
     @staticmethod
-    def r_historico_perfil(auth_token):
-        input = {}
-        headers = { 
-            "Authorization": f'Bearer {auth_token}'
-        }
+    def r_historico_perfil():
+        auth_token = Storage.r_authtoken()
+        if auth_token:
+            input = {}
+            headers = { 
+                "Authorization": f'Bearer {auth_token}'
+            }
 
-        url = Environment.REQUEST_URL + '/perfis/historico'
+            url = Environment.REQUEST_URL + '/perfis/historico'
 
-        try:
-            resp = requests.request("POST", url, json=input, headers=headers)
-            status = resp.status_code
-            resp = resp.json()
-            resp['status'] = status
-        except:
-            resp = False
-        return resp
+            try:
+                resp = requests.request("POST", url, json=input, headers=headers)
+                status = resp.status_code
+                resp = resp.json()
+                resp['status'] = status
+            except:
+                resp = False
+            return resp
+        else:
+            return False
+
+    # Conteudos
+    @staticmethod
+    def r_conteudo_id(id_conteudo):
+        auth_token = Storage.r_authtoken()
+        if auth_token:
+            input = {'idConteudo': id_conteudo}
+
+            headers = { 
+                "Authorization": f'Bearer {auth_token}'
+            }
+
+            url = Environment.REQUEST_URL + '/conteudos/id'
+
+            try:
+                resp = requests.request("POST", url, json=input, headers=headers)
+                status = resp.status_code
+                resp = resp.json()
+                resp['status'] = status
+            except:
+                resp = False
+            return resp
+        else:
+            return False
 
     # Formações
     @staticmethod

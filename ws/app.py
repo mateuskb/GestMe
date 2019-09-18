@@ -6,9 +6,10 @@ BASE_PATH = os.path.abspath(__file__+ './')
 sys.path.append(BASE_PATH)
 
 from inc.classes.lib.Request import RequestLib
-from inc.classes.db.Perfis import DbPerfis
+from inc.classes.db.Conteudos import DbConteudos
 from inc.classes.db.Formacoes import DbFormacoes
 from inc.classes.db.Paises import DbPaises
+from inc.classes.db.Perfis import DbPerfis
 
 # App init
 app = Flask(__name__)
@@ -18,9 +19,10 @@ app.config.update(
 )
 
 # Classes
-Perfis = DbPerfis()
+Conteudos = DbConteudos()
 Formacoes = DbFormacoes()
 Paises = DbPaises()
+Perfis = DbPerfis()
 Request_lib = RequestLib()
 
 # App Routes
@@ -83,6 +85,22 @@ def r_historico_perfil():
         mimetype='application/json'
     )
     return response
+
+# CONTEUDOS
+@app.route('/conteudos/id', methods=['POST'])
+def r_conteudo_id():
+    input = request.json
+    resp = Request_lib.get_authorization(request, type='Bearer', decode64=False)
+    input['authToken'] = resp if resp else ''
+    resp = Conteudos.r_conteudo_id(input)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
 
 # PAISES
 @app.route('/paises', methods=['GET'])

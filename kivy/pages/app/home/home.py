@@ -112,8 +112,8 @@ class HomeWindow(Screen):
                                 cnt_title = conteudo['con_c_titulo'] if 'con_c_titulo' in conteudo else self.default_image
                                 cnt_pop = conteudo['con_f_popularidade'] if 'con_f_popularidade' in conteudo else self.default_image
 
-                                cnt_info = f"Name : {cnt_name}\n"
-                                cnt_info += f"Title : {cnt_title}\n" 
+                                cnt_info = f"Title : {cnt_title}\n" 
+                                cnt_info += f"Name : {cnt_name}\n"
                                 cnt_info += f"Popularity [1-10] : {cnt_pop}\n" 
                             else:
                                 self.ids.last_content_info.text = cnt_info
@@ -133,11 +133,22 @@ class HomeWindow(Screen):
     def consts(self):
         return Consts()
 
-    def image_press(self, object):  
-        link = self.mv_data.iloc[int(object.id)]['con_c_link']
+    def image_press(self, object=None, dict=None):  
+        link = None
+
+        if object:
+            link = self.mv_data.iloc[int(object.id)]['con_c_link']
+        elif dict:
+            link = dict['con_c_link']
+        else:
+            False
+
         if link:
-            webbrowser.open(link)
-        
+            webbrowser.open(link)        
+
+    def redirect_app_uperfil(self):
+        self.parent.current = 'app_uperfil_screen'
+
     def logout(self):
         resp = Storage.logoff()
         if resp:

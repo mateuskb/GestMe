@@ -16,6 +16,7 @@ from pages.signup.signup import SignUpWindow
 from pages.signup.signupok import SignupokWindow
 from pages.app.app import AppWindow
 from pages.app.home.home import HomeWindow
+from pages.app.update_perfil.uperfil import UperfilWindow
 
 
 # class MainWindow(BoxLayout):
@@ -70,6 +71,7 @@ class MainApp(App):
     def load_app(self):
         sm.add_widget(AppWindow(name='app_app_screen'))
         sm.add_widget(HomeWindow(name='app_home_screen'))
+        sm.add_widget(UperfilWindow(name='app_uperfil_screen'))
         # print("Load_app : ", sm.screens)
 
     def unload_app(self):

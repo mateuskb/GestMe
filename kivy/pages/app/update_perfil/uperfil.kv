@@ -1,0 +1,43 @@
+#:kivy 1.8.0
+<UperfilWindow>:
+    id: main_win
+    orientation: 'vertical'
+    spacing: 10
+    space_x: self.size[0]/3
+    
+    canvas.before:
+        Color: 
+            rgba: root.consts().COLOR_APP[0]
+        
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        orientation:'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+            height: 100
+            
+            canvas.before:
+                Color: 
+                    rgba: root.consts().COLOR_APP[0]
+                
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            AnchorLayout:
+                anchor_x: 'center'
+                anchor_y: 'top'
+
+                BoxLayout:
+                    size_hint:(1, 1)
+                    orientation:'vertical'
+                    size_hint_min: (800,600)
+                    size_hint_max: (800,600)
+                    padding: 10
+                
+                    HoverButton:
+                        text:'Olaaaaa'
+                        on_release: root.redirect_app_home()

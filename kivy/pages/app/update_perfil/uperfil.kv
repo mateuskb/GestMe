@@ -1,4 +1,14 @@
 #:kivy 1.8.0
+#:import Factory kivy.factory.Factory
+
+<SpinnerOption>:
+    size:  root.width, 40
+    background_color: (.06, .45, .45, 1)
+    background_normal: ''
+
+<MyDropdown@DropDown>:
+    max_height: 200
+
 <UperfilWindow>:
     id: main_win
     orientation: 'vertical'
@@ -15,10 +25,9 @@
 
     BoxLayout:
         orientation:'vertical'
-
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: 50
             
             canvas.before:
                 Color: 
@@ -27,17 +36,104 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            AnchorLayout:
-                anchor_x: 'center'
-                anchor_y: 'top'
+            
+            Label:
+                text:'Update Perfil'
+                bold: True
+                size_hint_x: 0.9
+        
+        BoxLayout:
+            orientation: 'vertical'
+            padding: main_win.space_x, 10
+            spacing: 10
+        
+            BoxLayout:
+                id: box_main
+                orientation: 'vertical'
+                spacing: 15
+                size_hint_y: None
+                height: 390
+                
+                Label:
+                    id: info
+                    text: ''
+                    markup: True
+                    
+                TextInput: 
+                    id: nam_field
+                    hint_text: 'Name'
+                    multiline: False
+                    write_tab: False
+                    size_hint_y: None
+                    height: 32
+                    focus: True
+                    on_text_validate: usr_field.focus = True
+                
+                TextInput: 
+                    id: usr_field
+                    hint_text: 'Username'
+                    multiline: False
+                    write_tab: False
+                    size_hint_y: None
+                    height: 32
+                    focus: False
+                    on_text_validate: ema_field.focus = True
 
                 BoxLayout:
-                    size_hint:(1, 1)
-                    orientation:'vertical'
-                    size_hint_min: (800,600)
-                    size_hint_max: (800,600)
-                    padding: 10
+                    orientation: 'horizontal'
+                    spacing: 15
+                    size_hint_y: None
+                    height: 32
+                    
+                    Label:
+                        text: 'Birthday ( dd/mm/yyyy )'
+                        markup: True
+                        
+                    DateInput:
+                        id: bir_field
+                        focus: False
+                        write_tab: False
+                        on_text_validate: pwd_field.focus = True
+
+                Spinner:
+                    id: fom_field
+                    text: 'Education'
+                    values: root.list_formacoes()
+                    background_color: root.consts().COLOR_APP[1]
+                    height: '32dp'
+                    on_text: root.textinputtext = self.text
+                    dropdown_cls: Factory.MyDropdown
                 
-                    HoverButton:
-                        text:'Olaaaaa'
-                        on_release: root.redirect_app_home()
+                Spinner:
+                    id: pai_field
+                    text: 'Contries'
+                    values: root.list_paises()
+                    background_color: root.consts().COLOR_APP[1]
+                    height: '32dp'
+                    on_text: root.textinputtext = self.text
+                    dropdown_cls: Factory.MyDropdown
+
+            Label:
+                id:sp
+                size_hint_y: None
+                height: 20
+        
+            HoverButton:
+                text: 'Confirm'
+                size_hint_y: None
+                height: 40
+                background_color: root.consts().COLOR_APP[1]
+                background_normal: ''
+                on_release: root.validate_user()
+
+            Label:
+                id:sp2
+            
+
+    FlatButton:
+        size_hint_y: .1
+        height: 40
+        text: 'Back'
+        on_release: root.redirect_app_home()
+
+

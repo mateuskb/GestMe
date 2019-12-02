@@ -204,6 +204,160 @@ class DbPerfis:
                     cur.close()
 
         return data
+
+    def u_perfil(self, input):
+        
+        data = {
+            'ok': False,
+            'errors': {},
+            'data': {}
+        }
+
+        # Vars
+        pas = Password()
+        pai = DbPaises()
+        fom = DbFormacoes()
+        id_endereco = 0
+        
+        # Input
+        id_perfil = 0
+        perfil = ''
+        username = ''
+        nascimento = ''
+        id_pais = 0
+        id_formacao = 0
+        auth_token = ''
+
+
+        # Params
+        if input:
+            if 'perfil' in input:
+                perfil = str(input['perfil']['per_c_perfil']) if 'per_c_perfil' in input['perfil'] else ''
+                username = str(input['perfil']['per_c_username']) if 'per_c_username' in input['perfil'] else ''                
+                nascimento = str(input['perfil']['per_d_nascimento']) if 'per_d_nascimento' in input['perfil'] else ''
+                id_pais = int(input['perfil']['per_fk_pais']) if 'per_fk_pais' in input['perfil'] else 0 
+                id_formacao = int(input['perfil']['per_fk_formacao']) if 'per_fk_formacao' in input['perfil'] else 0 
+                auth_token = str(input['authToken']) if 'authToken' in input else '' 
+        
+        if not auth_token:
+            data['errors']['401'] = 'Token não indicado.'
+        else:
+            try:
+                payload_auth = jwt.decode(auth_token, key=consts.JWT_SECRET, algorithms=[consts.JWT_ALGORITHM])
+                if 'idPerfil' in payload_auth:
+                    id_perfil = int(payload_auth['idPerfil'])
+                else:
+                    data['errors']['401'] = '401'
+            except Exception as error:
+                data['errors']['401'] = str(error)
+
+        # Validation
+        if not id_perfil:
+            data['errors']['idPerfil'] = 'Id de perfil não indicado.'
+
+        if not perfil:
+            data['errors']['perfil'] = 'Perfil não indicado.'
+        
+        if not username:
+            data['errors']['username'] = 'Username não indicado.'            
+        else:
+            username = username.strip()
+            if len(username) > 40:
+                data['errors']['username'] = 'Username deve ter menos que 40 caracteres.'
+            else:
+                resp = self.valor_em_campo('per_c_username', username, id=id_perfil)
+                # data['resp'] = resp
+                if resp:
+                    if resp['ok']:
+                        if resp['data']:
+                            data['errors']['username'] = 'username já encontrado.'   
+                    else:
+                        data['errors']['username'] = 'Erro computando username.'    
+                else:
+                    data['errors']['username'] = 'Erro computando username.'
+        
+        if id_pais < 1:
+            data['errors']['pais'] = 'País não indicado.'
+        else:
+            resp = pai.r_pais(id_pais)
+            if resp:
+                if resp['ok']:
+                    if not resp['data']:
+                        data['errors']['pais'] = 'País inválido.'
+                else:
+                    data['errors']['pais'] = 'Erro lendo país.'
+            else:
+                data['errors']['pais'] = 'Erro lendo país.'
+        
+        if id_formacao > 0:
+            resp = fom.r_formacao(id_formacao)
+            # data['resp'] = resp
+            if resp:
+                if resp['ok']:
+                    if not resp['data']:
+                        data['errors']['formacao'] = 'Formação inválido.'
+                else:
+                    data['errors']['formacao'] = 'Erro lendo formação.'
+            else:
+                data['errors']['formacao'] = 'Erro lendo formação.'
+
+        if not self.conn:
+            data['errors']['conn'] = 'Erro de comunicação com o banco de dados.'
+
+        # data['perfil'] = perfil
+        # data['username'] = username
+        # data['nascimento'] = nascimento
+        # data['id_pais'] = id_pais
+        # data['id_formacao'] = id_formacao
+        # data['id_perfil'] = id_perfil
+        
+        if not data['errors']:
+            try:
+                cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                
+                sql = """
+                    UPDATE 
+                        perfis
+                    SET
+                        per_c_perfil = %s,
+                        per_c_username = %s,
+                        per_d_nascimento = %s,
+                        per_fk_pais = %s,
+                        per_fk_formacao = %s
+                    WHERE
+                        per_pk = %s
+
+                    RETURNING *
+                    ;
+                    
+                """
+                
+                bind = [
+                    perfil,
+                    username,
+                    nascimento,
+                    id_pais,
+                    id_formacao if id_formacao > 0 else None,
+                    id_perfil
+                ]
+
+                cur.execute(sql, bind)
+                row = cur.fetchone()
+                
+                if not data['errors']:
+                    data['ok'] = True
+                    data['data'] = row['per_pk']
+                    self.conn.commit()
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                self.conn.rollback()
+                data['errors']['conn'] = 'Erro na conexão com o banco de dados: ' + str(error)
+            
+            finally:
+                if(cur):
+                    cur.close()
+
+        return data
     
     def r_login(self, credentials):
         

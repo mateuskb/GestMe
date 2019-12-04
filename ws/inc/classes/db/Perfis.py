@@ -566,9 +566,9 @@ class DbPerfis:
                     SELECT
                         per_pk,
                         per_c_perfil,
-                        per_d_nascimento,
+                        to_char( per_d_nascimento::DATE, 'DD-MM-YYYY' ) as per_d_nascimento,
                         per_c_email,
-                        per_dt_criado_em_serv,
+                        to_char( per_dt_criado_em_serv::DATE, 'DD-MM-YYYY' ) as per_dt_criado_em_serv,
                         per_c_username,
                         per_b_ativo,
                         per_c_avatar,

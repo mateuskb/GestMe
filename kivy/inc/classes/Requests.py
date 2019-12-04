@@ -59,6 +59,37 @@ class Requests:
         return resp
     
     @staticmethod
+    def u_perfil(name, username, birthday, id_pais, id_formacao):
+        auth_token = Storage.r_authtoken()
+        if auth_token:
+            headers = { 
+                    "Authorization": f'Bearer {auth_token}'
+                }
+
+            input = {
+                "perfil": {
+                    "per_c_perfil": name,
+                    "per_c_username": username,
+                    "per_d_nascimento": birthday,
+                    "per_fk_pais": id_pais,
+                    "per_fk_formacao": id_formacao
+                }
+            }
+            
+            url = Environment.REQUEST_URL + '/perfis/update'
+
+            try:
+                resp = requests.request("POST", url, json=input, headers=headers)
+                status = resp.status_code
+                resp = resp.json()
+                resp['status'] = status
+            except:
+                resp = False
+            return resp
+        else:
+            return False
+    
+    @staticmethod
     def r_perfil():
         auth_token = Storage.r_authtoken()
         if auth_token:
@@ -139,6 +170,19 @@ class Requests:
         except:
             resp = False
         return resp
+    
+    @staticmethod
+    def r_formacao_id(id_formacao):
+        url = Environment.REQUEST_URL + '/formacoes/id'
+        input = {'for_pk': id_formacao}
+        try:
+            resp = requests.request("POST", url, json=input)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
 
     @staticmethod
     def r_formacao_nome(formacao):
@@ -159,6 +203,19 @@ class Requests:
         url = Environment.REQUEST_URL + '/paises'
         try:
             resp = requests.request("GET", url)
+            status = resp.status_code
+            resp = resp.json()
+            resp['status'] = status
+        except:
+            resp = False
+        return resp
+    
+    @staticmethod
+    def r_pais_id(id_pais):
+        url = Environment.REQUEST_URL + '/paises/id'
+        input = {'pai_pk': id_pais}
+        try:
+            resp = requests.request("POST", url, json=input)
             status = resp.status_code
             resp = resp.json()
             resp['status'] = status

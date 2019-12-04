@@ -117,7 +117,20 @@ def r_conteudo_id():
     return response
 
 
-# PAISES
+# CONTEUDOS
+@app.route('/paises/id', methods=['POST'])
+def r_pais_id():
+    input = request.json
+    id_pais = input['pai_pk'] if 'pai_pk' in  input else 0
+    resp = Paises.r_pais(id_pais)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
 @app.route('/paises', methods=['GET'])
 def r_paises():
     resp = Paises.r_paises()
@@ -152,7 +165,20 @@ def r_formacoes():
         mimetype='application/json'
     )
     return response
-    
+
+@app.route('/formacoes/id', methods=['POST'])
+def r_formacao_id():
+    input = request.json
+    id_formacao = input['for_pk'] if 'for_pk' in  input else 0
+    resp = Formacoes.r_formacao(id_formacao)
+    status = 200 if resp['ok'] else 401
+    response = app.response_class(
+        response= json.dumps(resp),
+        status=status,
+        mimetype='application/json'
+    )
+    return response
+
 @app.route('/formacoes/nome', methods=['POST'])
 def r_formacao_nome():
     input = request.json

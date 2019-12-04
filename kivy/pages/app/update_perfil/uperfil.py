@@ -1,4 +1,5 @@
 import sys, os, webbrowser
+from datetime import datetime
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -39,8 +40,8 @@ class UperfilWindow(Screen):
         resp = Requests.r_perfil()
         if resp:
             if resp['status'] == 200:
-                perfil = resp['data'] if 'data' in resp else []
-                
+                self.perfil = resp['data'] if 'data' in resp else []
+                self.default_inputs()
             else:
                 self.logout()
         else:
@@ -50,58 +51,51 @@ class UperfilWindow(Screen):
         return Consts()
         
     def redirect_app_home(self):
+        self.default_inputs()
         self.parent.current = 'app_home_screen'
     
     def validate_user(self):
         name = self.ids.nam_field.text
         username = self.ids.usr_field.text
-        email = self.ids.ema_field.text
         birthday = self.ids.bir_field.text
-        password = self.ids.pwd_field.text
-        confirmation = self.ids.vpw_field.text
         formacao = self.ids.fom_field.text
         pais = self.ids.pai_field.text
         info = self.ids.info
 
         error_invalid = '[color=#ff0000]Invalid inputs[/color]'
-        error_password = '[color=#ff0000]Confirm password does not match[/color]'
         error_required = '[color=#ff0000]Inputs Required[/color]'
         error_server = '[color=#ff0000]Connection lost! Try again later![/color]'
+        update_ok = '[color=#33ff55]Update completed with success!!![/color]'
 
-        if name == '' or username == '' or email == '' or birthday == '' or password == '' or confirmation == '' or formacao == 'Education' or pais == 'Contries':
+        if name == '' or username == '' or birthday == '' or formacao == 'Education' or pais == 'Contries':
             info.text = error_required
         else:
-            if password != confirmation:
-                info.text = error_password
+            if len(birthday) != 10:
+                info.text = error_invalid
             else:
-                if len(birthday) != 10:
-                    info.text = error_invalid
-                else:
-                    # birthday = datetime.strptime(birthday, '%d/%m/%Y')
-                    resp = Requests.r_formacao_nome(formacao)
-                    if resp:
-                        if resp['data']:
-                            if 'for_pk' in resp['data']:
-                                formacao = resp['data']['for_pk']
-                                resp = Requests.r_pais_nome(pais)
-                                if resp:
-                                    if resp['data']:
-                                        if 'pai_pk' in resp['data']:
-                                            pais = resp['data']['pai_pk']
-                                            resp = Requests.c_perfil(name, username, email, password, birthday, pais, formacao)
-                                            if resp:
-                                                if resp['ok']:
-                                                    if resp['data']:
-                                                        self.clear_inputs()
-                                                        self.parent.current = 'signupok_screen'
-                                                    else:
-                                                        for error in resp['errors'].values():
-                                                            info.text = info.text + f'{error} \n'  
+                # birthday = datetime.strptime(birthday, '%d/%m/%Y')
+                resp = Requests.r_formacao_nome(formacao)
+                if resp:
+                    if resp['data']:
+                        if 'for_pk' in resp['data']:
+                            formacao = resp['data']['for_pk']
+                            resp = Requests.r_pais_nome(pais)
+                            if resp:
+                                if resp['data']:
+                                    if 'pai_pk' in resp['data']:
+                                        pais = resp['data']['pai_pk']
+                                        resp = Requests.u_perfil(name, username, birthday, pais, formacao)
+                                        if resp:
+                                            if resp['ok']:
+                                                if resp['data']:
+                                                    self.default_inputs()
+                                                    info.text = update_ok
                                                 else:
                                                     for error in resp['errors'].values():
                                                         info.text = info.text + f'{error} \n'  
                                             else:
-                                                info.text = error_server
+                                                for error in resp['errors'].values():
+                                                    info.text = info.text + f'{error} \n'  
                                         else:
                                             info.text = error_server
                                     else:
@@ -113,7 +107,9 @@ class UperfilWindow(Screen):
                         else:
                             info.text = error_server
                     else:
-                        info.text = error_server    
+                        info.text = error_server
+                else:
+                    info.text = error_server    
                         
     def list_formacoes(self):
         info = self.ids.info
@@ -151,6 +147,45 @@ class UperfilWindow(Screen):
         resp = Storage.logoff()
         if resp:
             App.get_running_app().unload_app()
+
+    def default_inputs(self):
+        resp = Requests.r_perfil()
+        if resp:
+            if resp['status'] == 200:
+                perfil = resp['data'] if 'data' in resp else []
+                id_formacao = perfil['per_fk_formacao'] if 'per_fk_formacao' in perfil else 0
+                resp = Requests.r_formacao_id(id_formacao)
+                if resp['ok'] and resp['data']:
+                    formacao = resp['data']['for_c_formacao']
+                else:
+                    formacao = 'Education'
+
+                id_pais = perfil['per_fk_pais'] if 'per_fk_pais' in perfil else 0
+                resp = Requests.r_pais_id(id_pais)
+                if resp['ok'] and resp['data']:
+                    pais = resp['data']['pai_c_pais']
+                else:
+                    pais = 'Contries'
+
+                birth = perfil['per_d_nascimento'] if 'per_d_nascimento' in perfil else '01/01/1970'
+                # print(birth)
+                # try:
+                #     birth = datetime.strptime(birth, "%d-%m-%Y")
+                # except Exception as e:
+                #     print(e)
+                #     birth = '01/01/1970'
+
+                self.ids.nam_field.text = perfil['per_c_perfil'] if 'per_c_perfil' in perfil else ''
+                self.ids.usr_field.text = perfil['per_c_username'] if 'per_c_username' in perfil else ''
+                self.ids.bir_field.text = birth
+                self.ids.fom_field.text = formacao
+                self.ids.pai_field.text = pais
+                self.ids.info.text = ''
+            else:
+                self.logout()
+        else:
+            self.logout()
+        
 
 
 class UperfilApp(App):

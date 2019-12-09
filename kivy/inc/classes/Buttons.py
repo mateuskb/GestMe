@@ -3,7 +3,8 @@ from kivy.properties import ObjectProperty, BooleanProperty
 from kivy.uix.behaviors import ButtonBehavior  
 from kivy.core.window import Window
 from kivy.uix.button import Button
-from kivy.uix.image import AsyncImage
+from kivy.uix.image import AsyncImage, Image
+from kivy.properties import StringProperty
 from kivy.uix.label import Label
 
 class HoverBehavior(object):
@@ -65,3 +66,16 @@ class FlatButton(ButtonBehavior, Label):
 
 class ImageButton(ButtonBehavior, AsyncImage):  
     pass
+
+class ImageHoverButton(ButtonBehavior, AsyncImage, HoverBehavior):
+    def on_enter(self, *args):
+        Window.set_system_cursor("hand")
+        self.color =  [1, 1, 1, 0.1]
+
+    def on_leave(self, *args):
+        Window.set_system_cursor("arrow")
+        self.color =  [1, 1, 1, 1]
+
+    def on_release(self):
+        Window.set_system_cursor("arrow")
+        self.color =  [1, 1, 1, 1]

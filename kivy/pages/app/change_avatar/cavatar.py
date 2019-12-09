@@ -20,11 +20,11 @@ from inc.consts.consts import Consts
 
 
 # Load KV file
-Builder.load_file(BASE_PATH + '/pages/app/update_perfil/uperfil.kv')
+Builder.load_file(BASE_PATH + '/pages/app/change_avatar/cavatar.kv')
 
 
-class UperfilWindow(Screen):
-    
+class CavatarWindow(Screen):
+
     def __init__(self, **kwargs):
         super(UperfilWindow, self).__init__(**kwargs)
         # Check for login

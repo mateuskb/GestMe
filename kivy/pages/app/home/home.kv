@@ -87,13 +87,21 @@
                                     AnchorLayout:
                                         anchor_x: 'left'
                                         anchor_y: 'center'
+
+                                        HoverBox:
+                                            on_enter: change_avatar_label.text = 'Change Avatar'
+                                            on_leave: change_avatar_label.text = ' '
+
+                                            ImageHoverButton:
+                                                id: avatar_img
+                                                size_hint_x: None
+                                                width: 200 
+                                                on_press: root.redirect_avatar_change()
                                     
-                                        Image:
-                                            id: avatar_img
-                                            source: root.avatar 
-                                            size_hint_x: None
-                                            width: 200
-                                    
+                                            Label:
+                                                id: change_avatar_label
+                                                text: ' '
+
                                     BoxLayout:
                                         orientation:'vertical'    
                                             

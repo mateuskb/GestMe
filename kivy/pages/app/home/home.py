@@ -16,6 +16,7 @@ BASE_PATH = os.path.abspath(__file__+ '/../../../../')
 
 sys.path.append(BASE_PATH)
 from inc.classes.Buttons import HoverButton, ImageButton
+from inc.classes.Boxes import HoverBox
 from inc.classes.Requests import Requests
 from inc.classes.Storage import Storage
 from inc.consts.consts import Consts
@@ -30,15 +31,17 @@ class HomeWindow(Screen):
     mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv') # TO DO
     mv_data = mv_data.where((pd.notnull(mv_data)), None)
 
-    avatar = BASE_PATH + '/inc/assets/avatars/default.png'
     default_image = BASE_PATH + '/inc/assets/movie_bck_default.jpg'
 
     windows_sizes = Window.size
 
     def __init__(self, **kwargs):
         super(HomeWindow, self).__init__(**kwargs)
+        self.avatar = BASE_PATH + '/inc/assets/avatars/default.png'
+        
         # Check for login
         self.auth_token = Storage.r_authtoken()
+
         if not self.auth_token:
             Clock.schedule_once(self.logout, 2/30)
         else:
@@ -63,7 +66,10 @@ class HomeWindow(Screen):
                     container.add_widget(ImageButton(source=self.default_image, size_hint_x=None))
             else:
                 container.add_widget(ImageButton(source=self.default_image, size_hint_x=None))
-            
+
+    def load_avatar(self):
+        return self.avatar      
+
     def load_profile(self, dt):
         resp = Requests.r_perfil()
         if resp:
@@ -85,7 +91,9 @@ class HomeWindow(Screen):
                             open(BASE_PATH + '/inc/assets/avatars' + perfil['per_c_avatar'])
                             self.ids.avatar_img.source = BASE_PATH + '/inc/assets/avatars' + perfil['per_c_avatar']
                         except:
-                            self.ids.avatar_img.source = avatar
+                            self.ids.avatar_img.source = self.avatar
+                        
+                        self.load_avatar();
                     
                     self.ids.info_label.text = info_text
             else:
@@ -147,6 +155,9 @@ class HomeWindow(Screen):
             webbrowser.open(link)        
 
     def redirect_app_uperfil(self):
+        self.parent.current = 'app_uperfil_screen'
+    
+    def redirect_avatar_change(self):
         self.parent.current = 'app_uperfil_screen'
 
     def logout(self):

@@ -1,4 +1,4 @@
-import sys, os, webbrowser
+import sys, os, webbrowser, glob
 from datetime import datetime
 from kivy.app import App
 from kivy.lang import Builder
@@ -34,6 +34,8 @@ class CavatarWindow(Screen):
             Clock.schedule_once(self.logout, 2/30)
         else:
             Clock.schedule_once(self.load_profile, 3/30)
+            Clock.schedule_once(self.load_avatars, 3/30)
+
         
     def load_profile(self, dt):
         resp = Requests.r_perfil()
@@ -53,7 +55,13 @@ class CavatarWindow(Screen):
         self.default_input()
         self.parent.current = 'app_home_screen'
     
-    def validate_user(self):
+    def load_avatars(self, dt):
+        files = [f for f in glob.glob(BASE_PATH + '/inc/assets/' + '**/*.png', recursive=False)]
+        
+        for file in files:
+            pass
+
+    def validate_choice(self):
        pass
 
     def logout(self):

@@ -15,8 +15,8 @@ import pandas as pd
 BASE_PATH = os.path.abspath(__file__+ '/../../../../')
 
 sys.path.append(BASE_PATH)
-from inc.classes.Buttons import HoverButton, ImageButton
-from inc.classes.Boxes import HoverBox
+from inc.classes.Buttons import HoverButton, ImageButton, ImageHoverButton
+from inc.classes.Boxes import HoverBox, RoundedBox
 from inc.classes.Requests import Requests
 from inc.classes.Storage import Storage
 from inc.consts.consts import Consts
@@ -59,12 +59,12 @@ class HomeWindow(Screen):
         for index, row in self.mv_data.iterrows():
             if 'con_c_image_path' in row:
                 if row['con_c_image_path']:
-                    container.add_widget(ImageButton(id=str(index), source=Consts.BASE_IMAGE_MOVIE_URL + row['con_c_image_path'], size_hint_x=None, on_release=self.image_press))
+                    container.add_widget(ImageHoverButton(id=str(index), source=Consts.BASE_IMAGE_MOVIE_URL + row['con_c_image_path'], size_hint_x=None, on_press=self.image_press))
                     # a.bind(on_press=self.image_press(0))
                 else:
-                    container.add_widget(ImageButton(source=self.default_image, size_hint_x=None))
+                    container.add_widget(ImageHoverButton(source=self.default_image, size_hint_x=None))
             else:
-                container.add_widget(ImageButton(source=self.default_image, size_hint_x=None))
+                container.add_widget(ImageHoverButton(source=self.default_image, size_hint_x=None))
 
     def load_avatar(self):
         return self.avatar      

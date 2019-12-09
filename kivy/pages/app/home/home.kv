@@ -136,6 +136,14 @@
                                 BoxLayout:
                                     orientation:'horizontal'
 
+                                    canvas.before:
+                                        Color:
+                                            rgb: root.consts().COLOR_APP[1]
+                                        Rectangle:
+                                            size: (self.size[0] + 170, self.size[1]-20)
+                                            pos: (self.pos[0] -85, self.pos[1]+10)
+                                
+
                                     GridLayout:
                                         cols:3
 

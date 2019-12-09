@@ -135,7 +135,6 @@
                                             
                                 BoxLayout:
                                     orientation:'horizontal'
-                                    padding: 30
 
                                     GridLayout:
                                         cols:3
@@ -158,7 +157,7 @@
 
                                                 ImageButton:
                                                     id: last_content_image
-                                                    source: root.default_image
+                                                    source: root.load_default()
                                                     size_hint_y: None
                                                     height: dp(200)
 
@@ -168,7 +167,7 @@
                                             Label:
                                                 id: last_content_info
                                                 text: ''
-                                                color: root.consts().COLOR_MAIN[0]
+                                                color: root.consts().COLORS[0]
 
                                             
                 # TabbedPanelItem:

@@ -31,14 +31,13 @@ class HomeWindow(Screen):
     mv_data = pd.read_csv(BASE_PATH + '/inc/test_data/20movies.csv') # TO DO
     mv_data = mv_data.where((pd.notnull(mv_data)), None)
 
-    default_image = BASE_PATH + '/inc/assets/movie_bck_default.jpg'
-
     windows_sizes = Window.size
 
+    avatar = BASE_PATH + '/inc/assets/avatars/default.png'
+    default_image = BASE_PATH + '/inc/assets/movie_bck_default.jpg'
+    
     def __init__(self, **kwargs):
-        super(HomeWindow, self).__init__(**kwargs)
-        self.avatar = BASE_PATH + '/inc/assets/avatars/default.png'
-        
+        super(HomeWindow, self).__init__(**kwargs)    
         # Check for login
         self.auth_token = Storage.r_authtoken()
 
@@ -69,6 +68,9 @@ class HomeWindow(Screen):
 
     def load_avatar(self):
         return self.avatar      
+    
+    def load_default(self):
+        return self.default_image      
 
     def load_profile(self, dt):
         resp = Requests.r_perfil()
@@ -77,25 +79,31 @@ class HomeWindow(Screen):
                 perfil = resp['data'] if 'data' in resp else []
                 info_text = ''
                 if perfil:
-                    if 'per_c_perfil' in perfil:
-                        self.ids.name_label.text = f"Welcome back, {perfil['per_c_perfil']}"
-                    
-                    if 'per_c_username' in perfil:
-                        info_text= f"Username: {perfil['per_c_username']}\n"
+                    ativo = perfil['per_b_ativo'] if 'per_b_ativo' in perfil else False
+                    if ativo:
+                        if 'per_c_perfil' in perfil:
+                            self.ids.name_label.text = f"Welcome back, {perfil['per_c_perfil']}"
+
+                        if 'per_c_username' in perfil:
+                            info_text = f"Username: {perfil['per_c_username']}\n"
+                            
+                        if 'per_c_email' in perfil:
+                            info_text += f"Email: {perfil['per_c_email']}"
+                            
+                        if 'per_c_avatar' in perfil:
+                            try:
+                                open(BASE_PATH + '/inc/assets/avatars' + perfil['per_c_avatar'])
+                                self.ids.avatar_img.source = BASE_PATH + '/inc/assets/avatars' + perfil['per_c_avatar']
+                            except:
+                                self.ids.avatar_img.source = self.avatar
+                            
+                            self.load_avatar();
                         
-                    if 'per_c_email' in perfil:
-                        info_text += f"Email: {perfil['per_c_email']}"
-                        
-                    if 'per_c_avatar' in perfil:
-                        try:
-                            open(BASE_PATH + '/inc/assets/avatars' + perfil['per_c_avatar'])
-                            self.ids.avatar_img.source = BASE_PATH + '/inc/assets/avatars' + perfil['per_c_avatar']
-                        except:
-                            self.ids.avatar_img.source = self.avatar
-                        
-                        self.load_avatar();
-                    
-                    self.ids.info_label.text = info_text
+                        self.ids.info_label.text = info_text
+                    else:
+                        self.logout()
+                else:
+                        self.logout()
             else:
                 self.logout()
         else:
@@ -130,9 +138,6 @@ class HomeWindow(Screen):
                             
                         self.ids.last_content_image.source = cnt_img
                         self.ids.last_content_info.text = cnt_info
-
-                    else:
-                        self.logout()
             else:
                 self.logout()
         else:
@@ -158,7 +163,7 @@ class HomeWindow(Screen):
         self.parent.current = 'app_uperfil_screen'
     
     def redirect_avatar_change(self):
-        self.parent.current = 'app_uperfil_screen'
+        self.parent.current = 'app_cavatar_screen'
 
     def logout(self):
         resp = Storage.logoff()

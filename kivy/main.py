@@ -16,6 +16,7 @@ from pages.signup.signup import SignUpWindow
 from pages.signup.signupok import SignupokWindow
 from pages.app.app import AppWindow
 from pages.app.home.home import HomeWindow
+from pages.app.change_avatar.cavatar import CavatarWindow
 from pages.app.update_perfil.uperfil import UperfilWindow
 
 
@@ -72,6 +73,7 @@ class MainApp(App):
         sm.add_widget(AppWindow(name='app_app_screen'))
         sm.add_widget(HomeWindow(name='app_home_screen'))
         sm.add_widget(UperfilWindow(name='app_uperfil_screen'))
+        sm.add_widget(CavatarWindow(name='app_cavatar_screen'))
         # print("Load_app : ", sm.screens)
 
     def unload_app(self):

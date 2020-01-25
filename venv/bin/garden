@@ -1,4 +1,4 @@
-#!/var/www/html/env/bin/python3.6
+#!/var/www/html/GestMe/venv/bin/python3
 
 import sys
 import argparse

@@ -1,4 +1,4 @@
-#!/var/www/html/env/bin/python3.6
+#!/var/www/html/GestMe/venv/bin/python3
 
 # $Id: rstpep2html.py 4564 2006-05-21 20:44:42Z wiemann $
 # Author: David Goodger <goodger@python.org>

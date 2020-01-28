@@ -1,7 +1,7 @@
 class Consts:
     
     GESTME_DB = {
-        'hostname': "localhost",
+        'hostname': "192.168.100.59",
         'username': "mateuskb",
         'password': "djrtdg33",
         'database': "GestMe"
